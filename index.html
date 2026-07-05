@@ -3,2060 +3,553 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Vita | Ultimate Presentation</title>
+    <title>Smart Environmental Monitoring System For Neonatal Incubator</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-color: #010308;
-            --primary: #00ffcc;
-            --primary-glow: rgba(0, 255, 204, 0.4);
-            --secondary: #2563eb;
-            --secondary-glow: rgba(37, 99, 235, 0.4);
-            --accent: #f43f5e;
-            --accent-glow: rgba(244, 63, 94, 0.4);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: rgba(0, 0, 0, 0.4);
-            --bg-grad-1: rgba(0, 255, 204, 0.05);
-            --bg-grad-2: rgba(59, 130, 246, 0.05);
-        }
-
-        body.light-mode {
-            --bg-color: #f0f4f8;
-            --primary: #059669; 
-            --primary-glow: rgba(5, 150, 105, 0.2);
-            --secondary: #2563eb;
-            --secondary-glow: rgba(37, 99, 235, 0.2);
-            --accent: #e11d48;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --glass-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --glass-shadow: rgba(0, 0, 0, 0.05);
-            --bg-grad-1: rgba(5, 150, 105, 0.05);
-            --bg-grad-2: rgba(37, 99, 235, 0.05);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            transition: background-color 0.5s ease, color 0.5s ease;
-            background-image: 
-                radial-gradient(circle at 15% 50%, var(--bg-grad-1), transparent 30%),
-                radial-gradient(circle at 85% 30%, var(--bg-grad-2), transparent 30%);
-        }
-
-        h1, h2, h3, .space-font { font-family: 'Space Grotesk', sans-serif; }
-
-        .fixed-logo {
-            position: fixed; top: 25px; left: 30px; z-index: 1000;
-            text-decoration: none; transition: all 0.3s;
-        }
-        .vita-logo-text {
-            display: flex; align-items: center; gap: 10px; padding: 8px 24px;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 100px;
-            font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem;
-            font-weight: 700; color: #fff;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 204, 0.1);
-        }
-        body.light-mode .vita-logo-text { background: rgba(255, 255, 255, 0.9); color: #0f172a; border-color: var(--primary); }
-
-        .action-btn {
-            position: fixed; z-index: 1000; background: var(--glass-bg); border: 1px solid var(--glass-border);
-            padding: 12px; border-radius: 50%; color: var(--text-main); cursor: pointer; backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            box-shadow: 0 4px 15px var(--glass-shadow); transition: 0.3s;
-        }
-        .action-btn:hover { transform: scale(1.1); border-color: var(--primary); color: var(--primary); }
-        #theme-toggle { top: 20px; right: 20px; }
-        #fullscreen-toggle { top: 20px; right: 70px; }
-
-        #particles-js { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6; pointer-events: none; }
-
-        .ecg-container {
-            position: absolute; top: 50%; left: 0; width: 100vw; height: 200px;
-            transform: translateY(-50%); z-index: 0; pointer-events: none; opacity: 0.15; pointer-events: none;
-        }
-        body.light-mode .ecg-container { opacity: 0.05; }
-        .ecg-path {
-            fill: none; stroke: var(--primary); stroke-width: 2;
-            stroke-dasharray: 2000; stroke-dashoffset: 2000;
-            animation: drawECG 4s linear infinite; filter: drop-shadow(0 0 8px var(--primary));
-        }
-        @keyframes drawECG { 0% { stroke-dashoffset: 2000; } 100% { stroke-dashoffset: 0; } }
-
-        .swiper { width: 100%; height: 100%; z-index: 10; position: relative; }
-        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 4rem; }
-
-        .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border);
-            border-radius: 30px; box-shadow: 0 30px 60px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
-            position: relative; overflow: hidden; transform-style: preserve-3d; transition: all 0.5s ease;
-        }
-        body.light-mode .glass-panel { box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
-
-        .container { width: 100%; max-width: 1300px; margin: 0 auto; z-index: 2; position: relative; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-        
-        .text-gradient { background: linear-gradient(135deg, var(--text-main) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .text-primary { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
-        body.light-mode .text-primary { text-shadow: none; }
-        .section-title { font-size: 3.5rem; font-weight: 700; text-align: center; margin-bottom: 3rem; letter-spacing: -1px; text-transform: uppercase; }
-
-        /* Specific Elements */
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(0, 255, 204, 0.05);
-            border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 100px; font-family: 'Space Grotesk'; color: var(--primary);
-            margin-bottom: 2rem; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; box-shadow: 0 0 20px rgba(0,255,204,0.1);
-        }
-        body.light-mode .hero-badge { border-color: var(--primary); background: rgba(5,150,105,0.1); box-shadow: none; }
-        
-        .hero-title { font-size: 4rem; line-height: 1.1; font-weight: 700; margin-bottom: 1.5rem; }
-        .hero-subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 500px; line-height: 1.7; }
-        
-        .uni-logos { display: flex; gap: 20px; margin-bottom: 30px; }
-        .uni-logos img { height: 80px; background: white; padding: 5px; border-radius: 10px; box-shadow: 0 10px 20px var(--glass-shadow); }
-
-        .image-showcase { position: relative; width: 100%; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; }
-        .showcase-img { width: 90%; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 80px var(--primary-glow); transform: translateZ(50px); border: 1px solid rgba(0, 255, 204, 0.2); }
-        body.light-mode .showcase-img { box-shadow: 0 20px 50px rgba(0,0,0,0.15); border-color: var(--primary); }
-
-        ul.cyber-list { list-style: none; display: grid; gap: 1.5rem; transform: translateZ(20px); padding: 2rem; }
-        ul.cyber-list li { display: flex; gap: 1rem; align-items: flex-start; font-size: 1.2rem; color: var(--text-main); line-height: 1.6; }
-        ul.cyber-list li i { margin-top: 4px; font-size: 1.5rem; color: var(--primary); }
-
-        /* Team Grid */
-        .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-        .team-member { background: var(--glass-bg); padding: 1rem; border-radius: 15px; border: 1px solid var(--glass-border); text-align: center; transition: 0.3s; }
-        .team-member:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px var(--primary-glow); }
-        .team-member h4 { font-size: 1rem; color: var(--text-main); font-family: 'Space Grotesk'; }
-
-        /* Simulator Styles from Template */
-        .simulator-wrapper { max-width: 900px; margin: 0 auto; background: #050914; border: 1px solid #1e293b; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-family: 'Space Grotesk', sans-serif; transition: all 0.5s; }
-        body.light-mode .simulator-wrapper { background: #f8fafc; border-color: #cbd5e1; }
-        .sim-header { padding: 1rem 1.5rem; background: #0f172a; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; color: #f8fafc; }
-        body.light-mode .sim-header { background: #e2e8f0; color: #0f172a; border-color: #cbd5e1; }
-        .sim-main-grid { display: grid; grid-template-columns: 180px 1fr; gap: 0; }
-        .sim-left-col { padding: 1.2rem; border-right: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; gap: 0.5rem; }
-        body.light-mode .sim-left-col { border-right-color: #e2e8f0; }
-        .sim-right-col { display: flex; flex-direction: column; }
-        .sim-graph-container { position: relative; height: 140px; background: rgba(0,0,0,0.5); overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; }
-        body.light-mode .sim-graph-container { background: #f1f5f9; }
-        .sim-stat-box { background: rgba(255,255,255,0.04); padding: 0.75rem 0.6rem; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.06); transition: all 0.4s; }
-        body.light-mode .sim-stat-box { background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-color: #e2e8f0; }
-        .sim-grid-bg { position: absolute; top:0; left:0; width:100%; height:100%; opacity: 0.15; background-image: linear-gradient(#00ffcc 1px, transparent 1px), linear-gradient(90deg, #00ffcc 1px, transparent 1px); background-size: 20px 20px; pointer-events: none; }
-        .sim-line path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: trace 2.5s linear infinite; }
-        @keyframes trace { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
-        .sim-controls { padding: 1.5rem; border-top: 1px solid #1e293b; display: flex; justify-content: center; gap: 1rem; }
-        body.light-mode .sim-controls { border-color: #cbd5e1; }
-        .btn-trigger { background: #f43f5e; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; font-family: 'Space Grotesk'; }
-        .btn-trigger:hover { box-shadow: 0 0 20px rgba(244,63,94,0.6); }
-
-        .swiper-pagination-bullet { background: var(--text-muted); width: 12px; height: 12px; transition: 0.4s; }
-        .swiper-pagination-bullet-active { background: var(--primary); width: 40px; border-radius: 6px; box-shadow: 0 0 15px var(--primary-glow); }
-        .swiper-slide .anim { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .swiper-slide-active .anim { opacity: 1; transform: translateY(0); }
-        .delay-1 { transition-delay: 0.1s !important; }
-        .delay-2 { transition-delay: 0.2s !important; }
-        .delay-3 { transition-delay: 0.3s !important; }
-
-        .split-card { padding: 3rem; height: 100%; display: flex; flex-direction: column; transition: all 0.5s; transform-style: preserve-3d; }
-        .split-card:hover { transform: translateY(-10px) translateZ(20px); }
-
-        /* ── 3D Device Box Auto-Rotation ── */
-        @keyframes deviceSpin {
-            0%   { transform: rotateY(0deg)   rotateX(10deg); }
-            100% { transform: rotateY(360deg) rotateX(10deg); }
-        }
-        /* ── ISO Layer pulse hint ── */
-        @keyframes pulse-text {
-            0%,100% { opacity:1; } 50% { opacity:0.4; }
-        }
-        /* ── ISO layer transition ── */
-        .iso-layer { transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
-
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
-        body.light-mode .vita-3d-card { filter: drop-shadow(15px 25px 30px rgba(0,0,0,0.25)); }
-        body.light-mode .vita-3d-face { border: 1px solid #cbd5e1; box-shadow: inset 0 0 30px rgba(0,0,0,0.08); }
-        body.light-mode .vita-3d-back { background: #d1d5db; }
-        body.light-mode .vita-3d-right { background: #e5e7eb; }
-        body.light-mode .vita-3d-left { background: #9ca3af; }
-        body.light-mode .vita-3d-top { background: #f3f4f6; }
-        body.light-mode .vita-3d-bottom { background: #6b7280; }
-        
-        body.light-mode .vita-bump-face { border: 1px solid #cbd5e1; }
-        body.light-mode .vita-bump-front { background: #ffffff; }
-        body.light-mode .vita-bump-back { background: #d1d5db; }
-        body.light-mode .vita-bump-right { background: #e5e7eb; }
-        body.light-mode .vita-bump-left { background: #9ca3af; }
-        body.light-mode .vita-bump-top { background: #f3f4f6; }
-        body.light-mode .vita-bump-bottom { background: #6b7280; }
-
-        /* Studio Backdrop for 3D Device */
-        #device-studio-backdrop {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 40px var(--glass-shadow), inset 0 0 50px rgba(0, 255, 204, 0.05);
-        }
-        .studio-glow {
-            background: var(--primary);
-            filter: blur(100px);
-            opacity: 0.15;
-        }
-        
-        /* Light Mode Specific: Deep Dark Studio look */
-        body.light-mode #device-studio-backdrop {
-            background: radial-gradient(circle at 50% 30%, #1e293b, #0f172a, #020617);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 80px rgba(0, 0, 0, 0.8);
-            backdrop-filter: none; /* Not needed since it's solid dark */
-        }
-        body.light-mode .studio-glow {
-            background: #38bdf8; /* Cyan/Teal glow for rim lighting */
-            filter: blur(120px);
-            opacity: 0.25;
-            top: 10%;
-        }
-        body.light-mode .studio-floor {
-            background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent);
-            border-top: 1px solid rgba(255,255,255,0.02);
-            filter: blur(2px);
-        }
-
-        /* ════ MAGNETIC CURSOR ════ */
-        * { cursor: none !important; }
-        .cursor-dot {
-            position: fixed; top: 0; left: 0; width: 6px; height: 6px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 999999;
-            transform: translate(-50%, -50%);
-        }
-        .cursor-outline {
-            position: fixed; top: 0; left: 0; width: 30px; height: 30px;
-            border: 1.5px solid rgba(0, 242, 254, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 999998;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background-color 0.2s, border 0.2s;
-        }
-        .cursor-magnetic {
-            width: 45px !important;
-            height: 45px !important;
-            background-color: rgba(0, 242, 254, 0.1);
-            border: 1px solid rgba(0, 242, 254, 0.8) !important;
-        }
-
-        body.light-mode #device-studio-backdrop {
-            background: rgba(240, 245, 255, 0.6);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1), inset 0 0 30px rgba(0, 150, 255, 0.1);
-        }
-        body.light-mode .studio-floor {
-            background: linear-gradient(to top, rgba(0,0,0,0.05), transparent);
-            border-top: 1px solid rgba(0,0,0,0.03);
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Magnetic Cursor -->
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
 
-    <div class="fixed-logo">
-        <div class="vita-logo-text">VITA</div>
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span class="current-slide">1</span> / <span class="total-slides">20</span>
     </div>
 
-    <button id="theme-toggle" class="action-btn" onclick="document.body.classList.toggle('light-mode')"><i class="ph-fill ph-sun"></i></button>
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <span>Scroll</span>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+    </div>
 
-    <div id="particles-js"></div>
-    <div class="ecg-container"><svg viewBox="0 0 1000 200" preserveAspectRatio="none" style="width: 100%; height: 100%;"><path class="ecg-path" d="M0,100 L150,100 L170,70 L190,130 L210,100 L400,100 L420,50 L450,160 L480,100 L700,100 L720,80 L740,120 L760,100 L1000,100" /></svg></div>
-
-    <div class="swiper main-swiper">
+    <div class="swiper">
         <div class="swiper-wrapper">
-            
-            <!-- 1. Hero Slide -->
+
+            <!-- Slide 1: Hero -->
             <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div>
-                        <div class="uni-logos anim" style="display:flex; justify-content:flex-start; gap:40px; align-items:center; margin-bottom:10px;">
-                            <img src="images/logo_1.jpeg" alt="Logo 1" style="max-height:90px; width:auto; border-radius:12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5);">
-                            <img src="images/logo_2.jpeg" alt="Logo 2" style="max-height:90px; width:auto; border-radius:12px; box-shadow: 0 8px 20px rgba(0,0,0,0.5);">
-                        </div>
-                        <div class="hero-badge anim delay-1"><i class="ph-fill ph-heartbeat"></i> VITA MEDICAL PROTOCOL</div>
-                        <h1 class="hero-title anim delay-2">Smart <br><span class="text-gradient">Vital Signs</span><br>Monitor</h1>
-                        <p class="hero-subtitle anim delay-3">Graduation Project 2026<br>Faculty of Applied Health Sciences Technology<br>Technology of Biomedical Equipment</p>
-                    </div>
-                    <div class="image-showcase anim delay-3" data-tilt style="display:flex; justify-content:center; align-items:center; height:100%;">
-                        <img src="images/vita_render.png" alt="Vita Device" class="showcase-img" style="
-                            max-height:460px;
-                            width:auto;
-                            object-fit:contain;
-                            -webkit-mask-image: radial-gradient(ellipse 82% 88% at 52% 48%, black 38%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.4) 72%, transparent 100%);
-                            mask-image: radial-gradient(ellipse 82% 88% at 52% 48%, black 38%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.4) 72%, transparent 100%);
-                            filter: drop-shadow(0 0 30px rgba(0,242,254,0.2));
-                        ">
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- 2. Team Slide -->
-            <div class="swiper-slide">
-                <div class="container">
-                    <h2 class="section-title anim">Work <span class="text-gradient">Team</span></h2>
-                    <div class="team-grid anim delay-1">
-                        <div class="team-member"><h4>Nada Ebrahim Sliman mandor</h4></div>
-                        <div class="team-member"><h4>Mostafa Mahmoud Gaber Ebrahim</h4></div>
-                        <div class="team-member"><h4>Ahmed Kamal Ali Hegazy</h4></div>
-                        <div class="team-member"><h4>Hager Ahmed Shbl Elabd</h4></div>
-                        <div class="team-member"><h4>Elsayed Mohamed Elsayed Elmokadem</h4></div>
-                        <div class="team-member"><h4>Eman Abdelmgid Mohamed Madin</h4></div>
-                        <div class="team-member"><h4>Nada Mohamed Taha Mohamed Hashem</h4></div>
-                        <div class="team-member"><h4>Taha Ehab Taha Elshazly</h4></div>
-                        <div class="team-member"><h4>Amir Mostafa Tawfik Ahmed Atia</h4></div>
-                        <div class="team-member"><h4>Omar Elsayed Amer Hassan elsakhawy</h4></div>
-                        <div class="team-member"><h4>Mohamed Ahmed Mohamed Basiony Sohail</h4></div>
-                    </div>
-                    <p class="text-muted anim delay-2" style="text-align: center; margin-top: 2rem;">Supervisors: Dr. Ghada El-Banby | Vice Dean: Dr. Amal Salama | Dean: Dr. Yasser Ramah</p>
-                </div>
-            </div>
-
-            <!-- 3. ROADMAP SLIDE -->
-            <div class="swiper-slide">
-                <div class="container" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding: 1rem 2rem;">
-                    <h2 class="section-title anim" style="margin-bottom:0.5rem; text-align:center;">Presentation <span class="text-gradient">Roadmap</span></h2>
-                    <p class="text-muted anim delay-1" style="text-align:center; margin-bottom:1.5rem; font-size:0.9rem;">Our journey through the VITA project</p>
-                    <div class="roadmap-grid anim delay-1" style="
-                        display: grid;
-                        grid-template-columns: repeat(5, 1fr);
-                        gap: 0;
-                        width: 100%;
-                        max-width: 1100px;
-                        align-items: start;
-                    ">
-                        <!-- Step 1 -->
-                        <div class="roadmap-step" style="display:flex; flex-direction:column; align-items:center; position:relative;">
-                            <div class="rm-icon" style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#00f2fe,#4facfe); display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 20px rgba(79,172,254,0.5); z-index:1;">
-                                <i class="ph-fill ph-warning-circle" style="color:#0a0f1e;"></i>
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="hero-content" style="align-items: flex-start; text-align: left;">
+                            <div class="logos-container anim-elem">
+                                <img src="images/logo_1.jpeg" alt="University Logo">
+                                <img src="images/logo_2.jpeg" alt="Faculty Logo">
                             </div>
-                            <div class="rm-line" style="height:3px; background:linear-gradient(90deg,#4facfe,#a855f7); position:absolute; top:26px; left:50%; width:100%; z-index:0;"></div>
-                            <div class="rm-label" style="margin-top:12px; text-align:center;">
-                                <div style="font-size:0.6rem; color:#4facfe; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;">01</div>
-                                <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">Problem</div>
-                                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Introduction &<br>Motivation</div>
-                            </div>
-                        </div>
-                        <!-- Step 2 -->
-                        <div class="roadmap-step" style="display:flex; flex-direction:column; align-items:center; position:relative;">
-                            <div class="rm-icon" style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#a855f7,#6366f1); display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 20px rgba(168,85,247,0.5); z-index:1;">
-                                <i class="ph-fill ph-lightbulb" style="color:#fff;"></i>
-                            </div>
-                            <div class="rm-line" style="height:3px; background:linear-gradient(90deg,#a855f7,#f59e0b); position:absolute; top:26px; left:50%; width:100%; z-index:0;"></div>
-                            <div class="rm-label" style="margin-top:12px; text-align:center;">
-                                <div style="font-size:0.6rem; color:#a855f7; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;">02</div>
-                                <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">Solution</div>
-                                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">VITA Concept<br>& Architecture</div>
-                            </div>
-                        </div>
-                        <!-- Step 3 -->
-                        <div class="roadmap-step" style="display:flex; flex-direction:column; align-items:center; position:relative;">
-                            <div class="rm-icon" style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#f59e0b,#ef4444); display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 20px rgba(245,158,11,0.5); z-index:1;">
-                                <i class="ph-fill ph-circuitry" style="color:#fff;"></i>
-                            </div>
-                            <div class="rm-line" style="height:3px; background:linear-gradient(90deg,#f59e0b,#10b981); position:absolute; top:26px; left:50%; width:100%; z-index:0;"></div>
-                            <div class="rm-label" style="margin-top:12px; text-align:center;">
-                                <div style="font-size:0.6rem; color:#f59e0b; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;">03</div>
-                                <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">Hardware</div>
-                                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Components<br>& Sensors</div>
-                            </div>
-                        </div>
-                        <!-- Step 4 -->
-                        <div class="roadmap-step" style="display:flex; flex-direction:column; align-items:center; position:relative;">
-                            <div class="rm-icon" style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#10b981,#06b6d4); display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 20px rgba(16,185,129,0.5); z-index:1;">
-                                <i class="ph-fill ph-code" style="color:#fff;"></i>
-                            </div>
-                            <div class="rm-line" style="height:3px; background:linear-gradient(90deg,#10b981,#f43f5e); position:absolute; top:26px; left:50%; width:100%; z-index:0;"></div>
-                            <div class="rm-label" style="margin-top:12px; text-align:center;">
-                                <div style="font-size:0.6rem; color:#10b981; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;">04</div>
-                                <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">Software</div>
-                                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Algorithm, GUI<br>& Database</div>
-                            </div>
-                        </div>
-                        <!-- Step 5 -->
-                        <div class="roadmap-step" style="display:flex; flex-direction:column; align-items:center; position:relative;">
-                            <div class="rm-icon" style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#f43f5e,#ff6b6b); display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 20px rgba(244,63,94,0.5); z-index:1;">
-                                <i class="ph-fill ph-check-circle" style="color:#fff;"></i>
-                            </div>
-                            <div class="rm-label" style="margin-top:12px; text-align:center;">
-                                <div style="font-size:0.6rem; color:#f43f5e; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;">05</div>
-                                <div style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">Results</div>
-                                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Testing &<br>Conclusions</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Detail Cards Row -->
-                    <div class="anim delay-2" style="
-                        display: grid;
-                        grid-template-columns: repeat(5, 1fr);
-                        gap: 8px;
-                        width: 100%;
-                        max-width: 1100px;
-                        margin-top: 1.5rem;
-                    ">
-                        <div class="rm-card" style="background:rgba(79,172,254,0.08); border:1px solid rgba(79,172,254,0.25); border-radius:12px; padding:10px 8px; text-align:center;">
-                            <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.5;">
-                                <span style="color:#4facfe;">•</span> Why monitor vitals?<br>
-                                <span style="color:#4facfe;">•</span> Clinical gaps<br>
-                                <span style="color:#4facfe;">•</span> Project objectives
-                            </div>
-                        </div>
-                        <div class="rm-card" style="background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.25); border-radius:12px; padding:10px 8px; text-align:center;">
-                            <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.5;">
-                                <span style="color:#a855f7;">•</span> VITA overview<br>
-                                <span style="color:#a855f7;">•</span> System block diagram<br>
-                                <span style="color:#a855f7;">•</span> Measured parameters
-                            </div>
-                        </div>
-                        <div class="rm-card" style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:12px; padding:10px 8px; text-align:center;">
-                            <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.5;">
-                                <span style="color:#f59e0b;">•</span> Raspberry Pi 4<br>
-                                <span style="color:#f59e0b;">•</span> Arduino Nano<br>
-                                <span style="color:#f59e0b;">•</span> MAX30102 / AD8232 / DS18B20
-                            </div>
-                        </div>
-                        <div class="rm-card" style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:10px 8px; text-align:center;">
-                            <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.5;">
-                                <span style="color:#10b981;">•</span> Medical algorithm<br>
-                                <span style="color:#10b981;">•</span> GUI & touchscreen<br>
-                                <span style="color:#10b981;">•</span> 3D enclosure design
-                            </div>
-                        </div>
-                        <div class="rm-card" style="background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.25); border-radius:12px; padding:10px 8px; text-align:center;">
-                            <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.5;">
-                                <span style="color:#f43f5e;">•</span> Validation tests<br>
-                                <span style="color:#f43f5e;">•</span> Clinical comparison<br>
-                                <span style="color:#f43f5e;">•</span> Future work
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Introduction -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="glass-panel anim" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-info"></i> Monitoring vital signs is essential for early detection of physiological abnormalities.</li>
-                            <li><i class="ph-fill ph-heartbeat"></i> The five primary vital signs: HR, SpO2, Body Temp, BP, and RR.</li>
-                            <li><i class="ph-fill ph-warning"></i> Current Reality: Conventional systems require multiple devices, manual observation, and are less practical in emergency or home settings.</li>
-                            <li><i class="ph-fill ph-clock"></i> Manual observation introduces human error and delays diagnosis.</li>
-                        </ul>
-                    </div>
-                    <div class="image-showcase anim delay-1" data-tilt style="display:flex; flex-direction:column; justify-content:center; height:100%;">
-                        <h2 class="section-title" style="margin-bottom: 2rem;">Introduction & <br><span class="text-gradient">Problem Statement</span></h2>
-                        <img src="images/intro_problem.png" alt="Problem Statement" class="showcase-img" style="max-height:300px; width:auto; object-fit:contain; border-radius: 15px;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. The Solution -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="image-showcase anim" data-tilt style="display:flex; flex-direction:column; justify-content:center; height:100%;">
-                        <h2 class="section-title" style="margin-bottom: 2rem;">The <span class="text-gradient">VITA</span> Solution</h2>
-                        <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80" alt="Solution" class="showcase-img" style="max-height:300px; width:auto; object-fit:contain; border-radius: 15px;">
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-check-circle"></i> The VITA Objective: A single integrated portable platform.</li>
-                            <li><i class="ph-fill ph-activity"></i> Continuous, real-time multi-parameter tracking (no missed events).</li>
-                            <li><i class="ph-fill ph-brain"></i> Intelligent, automated signal interpretation replacing manual observation.</li>
-                            <li><i class="ph-fill ph-bell-ringing"></i> Meaningful alarms with recommended clinical actions.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Architecture -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="glass-panel anim" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-cpu"></i> The system integrates biomedical sensors with embedded electronics.</li>
-                            <li><i class="ph-fill ph-circuitry"></i> Multi-tier architecture: Acquisition, Processing, and Display.</li>
-                            <li><i class="ph-fill ph-lightning"></i> Signal conditioning and preprocessing happen in real-time.</li>
-                            <li><i class="ph-fill ph-plugs-connected"></i> VITA guarantees continuous monitoring with no data loss.</li>
-                        </ul>
-                    </div>
-                    <div class="anim delay-1" style="display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%;">
-                        <h2 class="section-title" style="margin-bottom:0.5rem;">System <span class="text-gradient">Architecture</span></h2>
-
-                        <!-- ISO EXPLODED VIEW WRAPPER -->
-                        <div id="exploded-view" onclick="toggleExplode()" style="
-                            position:relative; width:100%; height:550px;
-                            cursor:pointer; overflow:visible;
-                            display:flex; justify-content:center; align-items:center;
-                            perspective: 2500px;
-                        ">
-                            <!-- Interaction Hints -->
+                            <h1 class="hero-title anim-elem" style="font-size: 2.5rem; line-height: 1.3; margin-bottom: 1rem;">
+                                Smart Environmental Monitoring System<br>
+                                For Neonatal Incubator
+                            </h1>
+                            <p class="hero-subtitle anim-elem" style="margin-left: 0; text-align: left; max-width: 100%;">A comprehensive IoT-based upgrade kit designed to enhance conventional incubators with real-time monitoring, automated control, and remote access capabilities.</p>
                             
-                            <div id="expl-hint-reassemble" style="
-                                position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
-                                color:var(--text-muted); font-size:0.9rem; opacity:0;
-                                transition:opacity 0.4s; z-index:10; white-space:nowrap;
-                            ">Click anywhere to reassemble</div>
-
-                            <!-- ISO 3D CONTAINER -->
-                            <!-- X: 62deg flattens it enough to prevent overlap. Z: -35deg for nice isometric angle -->
-                            <div id="iso-container" style="
-                                transform: rotateX(62deg) rotateZ(-35deg);
-                                transform-style: preserve-3d;
-                                position:relative;
-                                width:340px; height:220px;
-                                margin-top: 140px;
-                                transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                            ">
-                                <!-- Central Data Beam -->
-                                <div id="data-beam" style="
-                                    position:absolute; top:50%; left:50%;
-                                    width:8px; height:0px; /* Expands to 750px */
-                                    background: linear-gradient(to top, transparent, #00ffcc, #00f2fe, #b46aff, transparent);
-                                    transform: translate(-50%, -50%) rotateX(-90deg);
-                                    transform-origin: bottom center;
-                                    opacity: 0;
-                                    transition: all 0.8s ease;
-                                    box-shadow: 0 0 30px #00ffcc;
-                                "></div>
-
-                                <!-- Layer 0: Back Housing -->
-                                <div class="iso-layer" id="iso-l0" style="
-                                    position:absolute; width:100%; height:100%;
-                                    transform: translateZ(0px);
-                                    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                                    border-radius:15px; overflow:hidden;
-                                    background: rgba(230, 235, 240, 0.95);
-                                    border: 3px solid #adb5bd;
-                                    box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 10px 10px 20px rgba(0,0,0,0.3);
-                                    display:flex; align-items:center; justify-content:center;
-                                ">
-                                    <div style="font-size:2rem; color:#6c757d; font-weight:900; letter-spacing:2px;">BASE HOUSING</div>
-                                    
-                                    <div class="iso-label" style="position:absolute; right:-240px; top:50%; transform:translateY(-50%); opacity:0; transition:opacity 0.4s 0.2s;">
-                                        <div style="display:flex; align-items:center;">
-                                            <div style="width:70px; height:4px; background:#ced4da; box-shadow:0 0 8px #ced4da;"></div>
-                                            <div style="background:rgba(10,15,25,0.95); border:2px solid #ced4da; padding:15px 20px; border-radius:8px; margin-left:5px;">
-                                                <div style="color:#ffffff; font-size:1.6rem; font-weight:900; text-shadow:0 0 5px #ced4da;">3D PLA Housing</div>
-                                                <div style="color:#ced4da; font-size:1.2rem; margin-top:3px;">SolidWorks Design</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div style="display: flex; gap: 4rem; margin-top: 1rem;" class="anim-elem">
+                                <div>
+                                    <h4 style="color: var(--accent-teal); font-size: 1.2rem; text-transform: uppercase;">Faculty of Applied Health Sciences Technology</h4>
+                                    <p style="font-size: 1.4rem; font-weight: 600;">Menoufia University - Technology of Biomedical Equipment</p>
                                 </div>
-
-                                <!-- Layer 1: Power Supply -->
-                                <div class="iso-layer" id="iso-l1" style="
-                                    position:absolute; width:100%; height:100%;
-                                    transform: translateZ(20px);
-                                    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                                    border-radius:12px;
-                                    background: rgba(20, 25, 30, 0.9);
-                                    backdrop-filter: blur(5px);
-                                    border: 3px solid #ffcc00;
-                                    box-shadow: inset 0 0 25px rgba(255, 204, 0, 0.3);
-                                    background-image: radial-gradient(rgba(255,204,0,0.4) 2px, transparent 2px);
-                                    background-size: 20px 20px;
-                                    display:flex; align-items:center; justify-content:center;
-                                ">
-                                    <div style="color:#ffffff; font-weight:900; font-size:1.8rem; letter-spacing:2px; text-shadow:0 0 15px #ffcc00, 0 0 30px #ffcc00;">⚡ POWER SYSTEM</div>
-                                    
-                                    <div class="iso-label" style="position:absolute; left:-240px; top:50%; transform:translateY(-50%); opacity:0; transition:opacity 0.4s 0.3s;">
-                                        <div style="display:flex; align-items:center; flex-direction:row-reverse;">
-                                            <div style="width:70px; height:4px; background:#ffcc00; box-shadow:0 0 8px #ffcc00;"></div>
-                                            <div style="background:rgba(10,15,25,0.95); border:2px solid #ffcc00; padding:15px 20px; border-radius:8px; margin-right:5px; text-align:right;">
-                                                <div style="color:#ffffff; font-size:1.6rem; font-weight:900; text-shadow:0 0 5px #ffcc00;">Power Unit</div>
-                                                <div style="color:#ffcc00; font-size:1.2rem; margin-top:3px;">5V DC & Battery</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Layer 2: Arduino Nano -->
-                                <div class="iso-layer" id="iso-l2" style="
-                                    position:absolute; width:90%; height:90%; top:5%; left:5%;
-                                    transform: translateZ(40px);
-                                    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                                    border-radius:10px;
-                                    background: rgba(0, 60, 30, 0.9);
-                                    border: 3px solid #00ff88;
-                                    box-shadow: inset 0 0 30px rgba(0,255,136,0.5), 0 0 20px rgba(0,255,136,0.6);
-                                    background-image: 
-                                        linear-gradient(rgba(0,255,136,0.5) 2px, transparent 2px),
-                                        linear-gradient(90deg, rgba(0,255,136,0.5) 2px, transparent 2px);
-                                    background-size: 30px 30px;
-                                    display:flex; align-items:center; justify-content:center;
-                                ">
-                                    <div style="color:#ffffff; font-weight:900; font-size:1.8rem; letter-spacing:4px; text-shadow:0 0 15px #00ff88, 0 0 30px #00ff88;">ARDUINO ADC</div>
-                                    
-                                    <div class="iso-label" style="position:absolute; right:-240px; top:50%; transform:translateY(-50%); opacity:0; transition:opacity 0.4s 0.4s;">
-                                        <div style="display:flex; align-items:center;">
-                                            <div style="width:75px; height:4px; background:#00ff88; box-shadow:0 0 8px #00ff88;"></div>
-                                            <div style="background:rgba(10,15,25,0.95); border:2px solid #00ff88; padding:15px 20px; border-radius:8px; margin-left:5px;">
-                                                <div style="color:#ffffff; font-size:1.6rem; font-weight:900; text-shadow:0 0 5px #00ff88;">Data Module</div>
-                                                <div style="color:#00ff88; font-size:1.2rem; margin-top:3px;">ADC Processing</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Layer 3: Raspberry Pi 4 -->
-                                <div class="iso-layer" id="iso-l3" style="
-                                    position:absolute; width:95%; height:95%; top:2.5%; left:2.5%;
-                                    transform: translateZ(60px);
-                                    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                                    border-radius:10px;
-                                    background: rgba(25, 10, 40, 0.95);
-                                    border: 3px solid #b46aff;
-                                    box-shadow: inset 0 0 40px rgba(180,106,255,0.6), 0 0 25px rgba(180,106,255,0.7);
-                                    background-image: radial-gradient(circle at 50% 50%, rgba(180,106,255,0.4) 0%, transparent 70%);
-                                    display:flex; align-items:center; justify-content:center;
-                                ">
-                                    <div style="text-align:center;">
-                                        <i class="ph-fill ph-cpu" style="font-size:4rem; color:#ffffff; filter:drop-shadow(0 0 20px #b46aff);"></i>
-                                        <div style="color:#ffffff; font-weight:900; font-size:1.6rem; margin-top:10px; letter-spacing:3px; text-shadow:0 0 15px #b46aff;">RASPBERRY PI 4</div>
-                                    </div>
-
-                                    <div class="iso-label" style="position:absolute; left:-240px; top:50%; transform:translateY(-50%); opacity:0; transition:opacity 0.4s 0.5s;">
-                                        <div style="display:flex; align-items:center; flex-direction:row-reverse;">
-                                            <div style="width:75px; height:4px; background:#b46aff; box-shadow:0 0 8px #b46aff;"></div>
-                                            <div style="background:rgba(10,15,25,0.95); border:2px solid #b46aff; padding:15px 20px; border-radius:8px; margin-right:5px; text-align:right;">
-                                                <div style="color:#ffffff; font-size:1.6rem; font-weight:900; text-shadow:0 0 5px #b46aff;">Main CPU</div>
-                                                <div style="color:#b46aff; font-size:1.2rem; margin-top:3px;">Python Backend</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Layer 4: Sensors -->
-                                <div class="iso-layer" id="iso-l4" style="
-                                    position:absolute; width:80%; height:70%; top:15%; left:10%;
-                                    transform: translateZ(80px);
-                                    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                                    border-radius:10px;
-                                    background: rgba(40, 15, 5, 0.95);
-                                    border: 3px solid #ff6600;
-                                    box-shadow: inset 0 0 30px rgba(255,102,0,0.3), 0 0 30px rgba(255,102,0,0.6);
-                                    display:flex; justify-content:space-around; align-items:center; padding:15px;
-                                ">
-                                    <div style="text-align:center;">
-                                        <i class="ph-fill ph-heartbeat" style="font-size:3rem; color:#ff3333; filter:drop-shadow(0 0 10px #ff3333);"></i>
-                                        <div style="font-size:1rem; font-weight:900; color:#ffffff; margin-top:8px; text-shadow:0 0 10px #ff3333;">MAX30102</div>
-                                    </div>
-                                    <div style="text-align:center;">
-                                        <i class="ph-fill ph-thermometer" style="font-size:3rem; color:#00ccff; filter:drop-shadow(0 0 10px #00ccff);"></i>
-                                        <div style="font-size:1rem; font-weight:900; color:#ffffff; margin-top:8px; text-shadow:0 0 10px #00ccff;">DS18B20</div>
-                                    </div>
-                                    <div style="text-align:center;">
-                                        <i class="ph-fill ph-activity" style="font-size:3rem; color:#ffcc00; filter:drop-shadow(0 0 10px #ffcc00);"></i>
-                                        <div style="font-size:1rem; font-weight:900; color:#ffffff; margin-top:8px; text-shadow:0 0 10px #ffcc00;">ECG</div>
-                                    </div>
-
-                                    <div class="iso-label" style="position:absolute; right:-260px; top:50%; transform:translateY(-50%); opacity:0; transition:opacity 0.4s 0.6s;">
-                                        <div style="display:flex; align-items:center;">
-                                            <div style="width:85px; height:4px; background:#ff6600; box-shadow:0 0 8px #ff6600;"></div>
-                                            <div style="background:rgba(10,15,25,0.95); border:2px solid #ff6600; padding:15px 20px; border-radius:8px; margin-left:5px;">
-                                                <div style="color:#ffffff; font-size:1.6rem; font-weight:900; text-shadow:0 0 5px #ff6600;">Bio Sensors</div>
-                                                <div style="color:#ff6600; font-size:1.2rem; margin-top:3px;">Vitals Pickup</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Layer 5: Touch Screen (top) -->
-                                <div class="iso-layer" id="iso-l5" style="
-                                    position:absolute; width:100%; height:100%;
-                                    transform: translateZ(100px);
-                                    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-                                    border-radius:15px; overflow:hidden;
-                                    border: 4px solid var(--primary);
-                                    box-shadow: 0 0 50px rgba(0,255,204,0.8);
-                                    background: #000;
-                                ">
-                                    <img src="images/vita_gui_screen.png" alt="GUI" style="width:100%; height:100%; object-fit:cover; opacity:1;">
-                                    
-                                    <div class="iso-label" style="position:absolute; left:-240px; top:50%; transform:translateY(-50%); opacity:0; transition:opacity 0.4s 0.7s;">
-                                        <div style="display:flex; align-items:center; flex-direction:row-reverse;">
-                                            <div style="width:70px; height:4px; background:var(--primary); box-shadow:0 0 8px var(--primary);"></div>
-                                            <div style="background:rgba(10,15,25,0.95); border:2px solid var(--primary); padding:15px 20px; border-radius:8px; margin-right:5px; text-align:right;">
-                                                <div style="color:#ffffff; font-size:1.6rem; font-weight:900; text-shadow:0 0 5px var(--primary);">Touchscreen</div>
-                                                <div style="color:var(--primary); font-size:1.2rem; margin-top:3px;">PyQt5 GUI</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- /iso-container -->
-                        </div><!-- /exploded-view -->
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- 6. Raspberry Pi -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="image-showcase anim" data-tilt style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <h2 class="section-title" style="margin-bottom: 1rem;">Core <span class="text-gradient">Processor</span></h2>
-                        <img src="images/image8.jpeg" alt="Raspberry Pi 4" class="showcase-img" style="max-height:280px; width:auto; object-fit:contain; border-radius:15px;">
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-raspberry-pi"></i> Raspberry Pi 4 Model B serves as the central brain.</li>
-                            <li><i class="ph-fill ph-database"></i> Manages the local database for storing patient history.</li>
-                            <li><i class="ph-fill ph-desktop"></i> Hosts the GUI and runs the Python backend algorithms.</li>
-                            <li><i class="ph-fill ph-wifi-high"></i> Capable of future cloud integration and remote access.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 7. Arduino Nano -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="glass-panel anim" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-cpu"></i> Arduino Nano acts as the data acquisition module (ADC).</li>
-                            <li><i class="ph-fill ph-waveform"></i> Converts analog signals from sensors into digital data.</li>
-                            <li><i class="ph-fill ph-arrows-left-right"></i> Ensures reliable serial communication with the Raspberry Pi.</li>
-                            <li><i class="ph-fill ph-clock"></i> Provides precise timing for continuous sensor sampling.</li>
-                        </ul>
-                    </div>
-                    <div class="image-showcase anim delay-1" data-tilt style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <h2 class="section-title" style="margin-bottom: 1rem;">Data <span class="text-gradient">Acquisition</span></h2>
-                        <img src="images/image10.jpeg" alt="Arduino Nano" class="showcase-img" style="max-height:280px; width:auto; object-fit:contain; border-radius:15px;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 8. MAX30102 -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="image-showcase anim" data-tilt style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <h2 class="section-title" style="margin-bottom: 1rem;">Pulse <span class="text-gradient">Oximetry</span></h2>
-                        <img src="images/image12.jpeg" alt="MAX30102" class="showcase-img" style="max-height:280px; width:auto; object-fit:contain; border-radius:15px;">
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-drop"></i> MAX30102 Sensor for Heart Rate and SpO2.</li>
-                            <li><i class="ph-fill ph-lightbulb"></i> Uses Photoplethysmography (PPG) optical technology.</li>
-                            <li><i class="ph-fill ph-shield-check"></i> Non-invasive, highly accurate, and compact design.</li>
-                            <li><i class="ph-fill ph-activity"></i> Enables early detection of hypoxia or arrhythmias.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 9. DS18B20 -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="glass-panel anim" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-thermometer"></i> DS18B20 Digital Temperature Sensor.</li>
-                            <li><i class="ph-fill ph-target"></i> High precision medical-grade thermal measurement.</li>
-                            <li><i class="ph-fill ph-warning"></i> Triggers alerts for fever or hypothermia conditions.</li>
-                            <li><i class="ph-fill ph-plugs"></i> One-Wire interface ensures simple wiring to the MCU.</li>
-                        </ul>
-                    </div>
-                    <div class="image-showcase anim delay-1" data-tilt style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <h2 class="section-title" style="margin-bottom: 1rem;">Body <span class="text-gradient">Temperature</span></h2>
-                        <img src="images/image16.jpeg" alt="DS18B20" class="showcase-img" style="max-height:280px; width:auto; object-fit:contain; border-radius:15px;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 10. AD8232 -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="image-showcase anim" data-tilt style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                        <h2 class="section-title" style="margin-bottom: 1rem;">Electrocardiogram <span class="text-gradient">(ECG)</span></h2>
-                        <img src="images/image15.jpeg" alt="AD8232 ECG" class="showcase-img" style="max-height:280px; width:auto; object-fit:contain; border-radius:15px;">
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-heartbeat"></i> AD8232 Single-Lead ECG Front End.</li>
-                            <li><i class="ph-fill ph-user"></i> Extracts and amplifies small biopotential signals.</li>
-                            <li><i class="ph-fill ph-speaker-high"></i> Built-in noise rejection for clear waveform monitoring.</li>
-                            <li><i class="ph-fill ph-chart-line-up"></i> Crucial for diagnosing cardiac anomalies in real-time.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 8. Algorithm -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="image-showcase anim" data-tilt style="display:flex; flex-direction:column; justify-content:center;">
-                        <h2 class="section-title" style="margin-bottom: 2rem;">Medical <span class="text-gradient">Algorithm</span></h2>
-                        <img src="images/medical_algorithm.png" alt="Medical Algorithm" class="showcase-img" style="max-height:280px; width:auto; object-fit:contain; border-radius:15px;">
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-magic-wand"></i> VITA goes beyond simple measurements by deriving additional vitals.</li>
-                            <li><i class="ph-fill ph-calculator"></i> Blood Pressure (BP) & Respiratory Rate (RR): Estimated using mathematical models based on HR, SpO2, and Temp.</li>
-                            <li><i class="ph-fill ph-minus-circle"></i> Reduces the number of physical sensors attached to the patient.</li>
-                            <li><i class="ph-fill ph-brain"></i> Smart decision algorithm compares data with clinical thresholds.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-
-            
-            <!-- 9.5 Planning & Challenges -->
-            <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="glass-panel anim" data-tilt style="padding: 2rem;">
-                        <h3 class="space-font" style="color:var(--primary); margin-bottom:1rem; font-size:1.1rem;"><i class="ph-fill ph-strategy" style="margin-right:8px;"></i>Planning & Methodology</h3>
-                        <p class="text-muted" style="margin-bottom:1.5rem; font-size:0.8rem; line-height:1.6;">
-                            Calibrated sensors against commercial medical devices to ensure clinical accuracy before beginning software integration.
-                        </p>
-                        <h3 class="space-font" style="color:var(--secondary); margin-bottom:1rem; font-size:1.1rem;"><i class="ph-fill ph-warning" style="margin-right:8px;"></i>Engineering Challenges</h3>
-                        <ul class="cyber-list" style="font-size:0.8rem;">
-                            <li style="margin-bottom:12px;"><i class="ph-fill ph-activity" style="color:#ff5f56;"></i> <strong>ECG Noise:</strong> High electrical interference on AD8232.<br><span style="color:#999; font-size:0.75rem;">Solution: Implemented hardware grounding & digital moving-average filters.</span></li>
-                            <li><i class="ph-fill ph-clock-countdown" style="color:#ffbd2e;"></i> <strong>Serial Latency:</strong> Syncing 3 distinct sensors simultaneously.<br><span style="color:#999; font-size:0.75rem;">Solution: Optimized baud rate (9600) and structured packet formatting.</span></li>
-                        </ul>
-                    </div>
-                    <div class="image-showcase anim delay-1" data-tilt style="display:flex; flex-direction:column; justify-content:center;">
-                        <h2 class="section-title" style="margin-bottom: 1.5rem;">Development <span class="text-gradient">Journey</span></h2>
-                        <img src="images/vita_planning_data.png" alt="Planning Data" class="showcase-img" style="width:100%; height:auto; object-fit:contain;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 10. Software -->
-            <div class="swiper-slide">
-                <div class="container grid-2" style="align-items: center;">
-                    
-                    <!-- Left Column: Title and Code Blocks -->
-                    <div class="anim" style="display:flex; flex-direction:column; gap:10px;">
-                        <h2 class="section-title" style="margin-bottom:0.2rem;">Software <span class="text-gradient">Implementation</span></h2>
-                        <p class="text-muted" style="font-size:0.75rem;margin-bottom:0.5rem;">Real Python modules running on Raspberry Pi 4</p>
-                        
-                        <!-- Panel 1 -->
-                        <div style="border-radius:6px;overflow:hidden;border:1px solid rgba(0,200,120,0.35);box-shadow:0 0 10px rgba(0,200,120,0.08);">
-                            <div style="background:#2d2d2d;padding:3px 8px;display:flex;align-items:center;gap:4px;border-bottom:1px solid #444;">
-                                <span style="width:7px;height:7px;border-radius:50%;background:#ff5f56;display:inline-block;"></span>
-                                <span style="width:7px;height:7px;border-radius:50%;background:#ffbd2e;display:inline-block;"></span>
-                                <span style="width:7px;height:7px;border-radius:50%;background:#27c93f;display:inline-block;"></span>
-                                <span style="color:#888;font-size:0.5rem;margin-left:4px;font-family:'Courier New',monospace;">sensor_reader.py</span>
                             </div>
-                            <pre style="background:#1e1e1e;margin:0;padding:6px 8px;font-size:0.48rem;line-height:1.4;font-family:'Courier New',monospace;overflow:hidden;color:#d4d4d4;"><span style="color:#608b4e"># VITA - Sensor Reading Module</span>
-<span style="color:#c586c0">import</span> <span style="color:#9cdcfe">serial</span>, <span style="color:#9cdcfe">threading</span>
-<span style="color:#c586c0">from</span> <span style="color:#9cdcfe">collections</span> <span style="color:#c586c0">import</span> <span style="color:#9cdcfe">deque</span>
-
-<span style="color:#c586c0">class</span> <span style="color:#4ec9b0">VitaSensorReader</span>:
-    <span style="color:#c586c0">def</span> <span style="color:#dcdcaa">__init__</span>(self, port=<span style="color:#ce9178">'/dev/ttyUSB0'</span>, baud=<span style="color:#b5cea8">9600</span>):
-        self.ser = serial.Serial(port, baud, timeout=<span style="color:#b5cea8">1</span>)
-        self.ecg = deque(maxlen=<span style="color:#b5cea8">500</span>)
-        self.hr = <span style="color:#b5cea8">0</span>; self.spo2 = <span style="color:#b5cea8">0</span>; self.temp = <span style="color:#b5cea8">0.0</span>
-        self.running = <span style="color:#569cd6">True</span>
-
-    <span style="color:#c586c0">def</span> <span style="color:#dcdcaa">read_loop</span>(self):
-        <span style="color:#c586c0">while</span> self.running:
-            <span style="color:#c586c0">try</span>:
-                parts = self.ser.readline().decode(<span style="color:#ce9178">'utf-8'</span>).strip().split(<span style="color:#ce9178">','</span>)
-                self.hr   = int(parts[<span style="color:#b5cea8">0</span>])   <span style="color:#608b4e"># AD8232 ECG</span>
-                self.spo2 = int(parts[<span style="color:#b5cea8">1</span>])   <span style="color:#608b4e"># MAX30102</span>
-                self.temp = float(parts[<span style="color:#b5cea8">2</span>]) <span style="color:#608b4e"># DS18B20</span>
-                self.ecg.append(float(parts[<span style="color:#b5cea8">3</span>]))
-            <span style="color:#c586c0">except</span>: <span style="color:#c586c0">pass</span></pre>
                         </div>
-                        
-                        <!-- Panel 2 -->
-                        <div style="border-radius:6px;overflow:hidden;border:1px solid rgba(0,150,255,0.35);box-shadow:0 0 10px rgba(0,150,255,0.08);">
-                            <div style="background:#2d2d2d;padding:3px 8px;display:flex;align-items:center;gap:4px;border-bottom:1px solid #444;">
-                                <span style="width:7px;height:7px;border-radius:50%;background:#ff5f56;display:inline-block;"></span>
-                                <span style="width:7px;height:7px;border-radius:50%;background:#ffbd2e;display:inline-block;"></span>
-                                <span style="width:7px;height:7px;border-radius:50%;background:#27c93f;display:inline-block;"></span>
-                                <span style="color:#888;font-size:0.5rem;margin-left:4px;font-family:'Courier New',monospace;">alert_engine.py</span>
-                            </div>
-                            <pre style="background:#1e1e1e;margin:0;padding:6px 8px;font-size:0.48rem;line-height:1.4;font-family:'Courier New',monospace;overflow:hidden;color:#d4d4d4;"><span style="color:#608b4e"># VITA - Clinical Alert Engine</span>
-THRESHOLDS = {<span style="color:#ce9178">'hr_high'</span>:<span style="color:#b5cea8">100</span>, <span style="color:#ce9178">'hr_low'</span>:<span style="color:#b5cea8">50</span>, <span style="color:#ce9178">'spo2_low'</span>:<span style="color:#b5cea8">92</span>, <span style="color:#ce9178">'temp_high'</span>:<span style="color:#b5cea8">38.5</span>}
-
-<span style="color:#c586c0">def</span> <span style="color:#dcdcaa">evaluate</span>(hr, spo2, temp):
-    alerts = []
-    <span style="color:#c586c0">if</span> hr &gt; THRESHOLDS[<span style="color:#ce9178">'hr_high'</span>]:
-        alerts.append((<span style="color:#ce9178">'CRITICAL'</span>, <span style="color:#ce9178">'Tachycardia'</span>))
-    <span style="color:#c586c0">elif</span> hr &lt; THRESHOLDS[<span style="color:#ce9178">'hr_low'</span>]:
-        alerts.append((<span style="color:#ce9178">'WARNING'</span>,  <span style="color:#ce9178">'Bradycardia'</span>))
-    <span style="color:#c586c0">if</span> spo2 &lt; THRESHOLDS[<span style="color:#ce9178">'spo2_low'</span>]:
-        alerts.append((<span style="color:#ce9178">'CRITICAL'</span>, <span style="color:#ce9178">'Hypoxemia'</span>))
-    <span style="color:#c586c0">if</span> temp &gt; THRESHOLDS[<span style="color:#ce9178">'temp_high'</span>]:
-        alerts.append((<span style="color:#ce9178">'WARNING'</span>,  <span style="color:#ce9178">'Pyrexia'</span>))
-    <span style="color:#c586c0">return</span> alerts <span style="color:#c586c0">or</span> [(<span style="color:#ce9178">'NORMAL'</span>, <span style="color:#ce9178">'Stable'</span>)]
-
-<span style="color:#c586c0">def</span> <span style="color:#dcdcaa">trigger_alarm</span>(level, msg):
-    <span style="color:#c586c0">if</span> level == <span style="color:#ce9178">'CRITICAL'</span>:
-        gui.flash_bar(<span style="color:#ce9178">'#cc0000'</span>, msg)
-        audio.beep(<span style="color:#b5cea8">880</span>, <span style="color:#569cd6">True</span>)</pre>
+                        <div class="image-container anim-img">
+                            <img src="images/hero.png" class="image-cover" alt="Smart Incubator">
                         </div>
                     </div>
-
-                    <!-- Right Column: Features List -->
-                    <div class="glass-panel anim delay-1" data-tilt style="padding: 1.5rem;">
-                        <ul class="cyber-list" style="margin: 0;">
-                            <li><i class="ph-fill ph-code"></i> Backend programmed in <strong>Python</strong> — modular, readable, maintainable.</li>
-                            <li><i class="ph-fill ph-serial-port"></i> Serial communication with Arduino via <strong>PySerial</strong> at 9600 baud.</li>
-                            <li><i class="ph-fill ph-desktop"></i> Real-time GUI built with <strong>Tkinter</strong> — live ECG, vitals, alerts.</li>
-                            <li><i class="ph-fill ph-warning-octagon"></i> Smart alert engine compares readings against <strong>clinical thresholds</strong>.</li>
-                            <li><i class="ph-fill ph-database"></i> Local <strong>SQLite</strong> database stores patient history for trend tracking.</li>
-                            <li><i class="ph-fill ph-chart-line-up"></i> Physicians can review and analyze historical session data.</li>
-                        </ul>
-                    </div>
-
                 </div>
             </div>
-            
-            <!-- 10.5 UI/UX & Recommendations -->
+
+            <!-- Slide 2: Abstract -->
             <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="image-showcase anim" data-tilt style="display:flex; flex-direction:column; justify-content:center;">
-                        <h2 class="section-title" style="margin-bottom: 1.5rem; text-align:left;">UI/UX & <span class="text-gradient">Decisions</span></h2>
-                        <img src="images/vita_gui_screen.png" alt="VITA GUI Screen" class="showcase-img" style="width:100%; max-height:320px; object-fit:contain; border-radius:10px; border:2px solid rgba(0,242,254,0.5); box-shadow: 0 0 35px rgba(0,242,254,0.25);">
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt style="padding: 1.5rem;">
-                        <h3 class="space-font" style="color:var(--primary); margin-bottom:1rem; font-size:1.1rem;"><i class="ph-fill ph-monitor" style="margin-right:8px;"></i>User Interface (GUI)</h3>
-                        <ul class="cyber-list" style="margin-bottom:1.5rem; font-size:0.8rem;">
-                            <li><i class="ph-fill ph-moon"></i> <strong>Dark Mode:</strong> Designed specifically to reduce eye strain for medical staff during long shifts.</li>
-                            <li><i class="ph-fill ph-wave-sine"></i> <strong>Live Waveforms:</strong> Real-time plotting of ECG for instant visual feedback.</li>
-                        </ul>
-                        <h3 class="space-font" style="color:#f59e0b; margin-bottom:1rem; font-size:1.1rem;"><i class="ph-fill ph-brain" style="margin-right:8px;"></i>Medical Recommendation Engine</h3>
-                        <ul class="cyber-list" style="font-size:0.8rem;">
-                            <li><i class="ph-fill ph-database"></i> <strong>Data Driven:</strong> Queries SQLite database history against clinical thresholds continuously.</li>
-                            <li><i class="ph-fill ph-first-aid"></i> <strong>Actionable Output:</strong> Generates on-screen advice (e.g., "Administer O2") instead of just raw numbers.</li>
-                        </ul>
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Abstract</h2>
+                            <h3 class="slide-subtitle anim-elem">System Overview</h3>
+                            <p class="anim-elem">Premature infants require a carefully controlled environment to maintain physiological stability. This project introduces a smart monitoring and control system for neonatal incubators.</p>
+                            <p class="anim-elem">It utilizes multiple sensors to measure <strong>temperature, humidity, air quality, sound levels, and infant weight</strong> in real time. A central microcontroller processes the data to regulate the environment and trigger alarms when necessary.</p>
+                            <p class="anim-elem">IoT integration allows healthcare professionals to monitor the neonate remotely via a mobile app, ensuring a rapid response to any critical changes.</p>
+                        </div>
+                        <div class="image-container anim-img">
+                            <img src="images/hero.png" class="image-cover" alt="Overview">
+                        </div>
                     </div>
                 </div>
             </div>
 
-
-            <!-- 11. Mechanical & 3D Interactive Showcase -->
-            <div class="swiper-slide" id="slide-3d">
-                <div class="container" style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; align-items: center; height: 100%;">
-                    
-                    <!-- Left Column: Info & Static Images -->
-                    <div style="display:flex; flex-direction:column; gap:1.5rem;">
-                        <h2 class="section-title anim" style="text-align:left; margin-bottom: 0;">Mechanical <span class="text-gradient">Design & 3D Model</span></h2>
-                        
-                        <div class="glass-panel anim" data-tilt style="padding: 1.2rem;">
-                            <ul class="cyber-list" style="margin:0; font-size: 0.85rem;">
-                                <li><i class="ph-fill ph-cube"></i> Custom enclosure modeled using SolidWorks 3D CAD.</li>
-                                <li><i class="ph-fill ph-printer"></i> Manufactured using 3D printing technology.</li>
-                                <li><i class="ph-fill ph-device-mobile-camera"></i> Dimensions: 26 × 21.4 × 15 cm.</li>
-                                <li><i class="ph-fill ph-wind"></i> Designed for portability and proper ventilation.</li>
+            <!-- Slide 3: Importance of Incubators -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="image-container anim-img">
+                            <img src="images/control.png" class="image-cover" alt="Incubator Care">
+                        </div>
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Clinical Importance</h2>
+                            <h3 class="slide-subtitle anim-elem">Why Neonatal Incubators Matter</h3>
+                            <ul>
+                                <li class="anim-elem"><strong>Thermoregulation:</strong> Prevents hypothermia by maintaining a neutral thermal environment.</li>
+                                <li class="anim-elem"><strong>Respiratory Support:</strong> Delivers controlled oxygen and CPAP therapy.</li>
+                                <li class="anim-elem"><strong>Infection Control:</strong> Provides a sealed physical barrier against airborne pathogens.</li>
+                                <li class="anim-elem"><strong>Fluid Homeostasis:</strong> High humidity prevents transepidermal water loss.</li>
+                                <li class="anim-elem"><strong>Continuous Observation:</strong> Real-time monitoring of vital signs.</li>
                             </ul>
                         </div>
-                        
-                        <div class="anim delay-1" style="display:flex; gap:15px; align-items:center; justify-content:flex-start;">
-                            <div style="text-align:center;">
-                                <img src="images/image28.jpeg" alt="SolidWorks 3D CAD" class="showcase-img" style="max-height:160px; width:auto; object-fit:contain; border-radius:12px; border:1px solid rgba(0,242,254,0.3);">
-                                <p style="font-size:0.65rem; color:var(--text-muted); margin-top:5px;">SolidWorks CAD</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Problem Statement -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Problem Statement</h2>
+                            <h3 class="slide-subtitle anim-elem">The Need for an Upgrade</h3>
+                            <p class="anim-elem">Traditional neonatal incubators lack integrated smart monitoring capabilities, requiring constant manual supervision by nursing staff.</p>
+                            <p class="anim-elem">While commercial "Smart Incubators" exist, they are extremely expensive, placing a heavy financial burden on developing healthcare facilities.</p>
+                            <div class="anim-elem" style="background: var(--bg-primary); padding: 1.5rem; border-left: 5px solid var(--accent-teal); border-radius: 8px; margin-top: 1rem;">
+                                <p style="color: var(--accent-blue); font-weight: 600; margin: 0;">Our project bridges this gap by creating a highly capable, low-cost upgrade kit that retrofits existing traditional incubators into intelligent, IoT-enabled life-support systems.</p>
                             </div>
-                            <div style="text-align:center;">
-                                <img src="images/vita_render_off.png" alt="3D Printed Prototype" class="showcase-img" style="
-                                    max-height:160px;
-                                    width:auto;
-                                    object-fit:contain;
-                                    -webkit-mask-image: radial-gradient(ellipse 80% 85% at 50% 48%, black 38%, rgba(0,0,0,0.8) 58%, rgba(0,0,0,0.3) 75%, transparent 100%);
-                                    mask-image: radial-gradient(ellipse 80% 85% at 50% 48%, black 38%, rgba(0,0,0,0.8) 58%, rgba(0,0,0,0.3) 75%, transparent 100%);
-                                    filter: drop-shadow(0 4px 16px rgba(0,242,254,0.15));
-                                ">
-                                <p style="font-size:0.65rem; color:var(--text-muted); margin-top:5px;">3D Printed Prototype</p>
+                        </div>
+                        <div class="image-container anim-img" style="background: var(--bg-primary); padding: 4rem;">
+                            <!-- Alert Icon -->
+                            <svg fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24" style="width:100%; height:100%; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Project Objectives -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Project Objectives</h2>
+                        <h3 class="slide-subtitle anim-elem">Key Goals of the System</h3>
+                        <div class="feature-grid" style="margin-top: 2rem;">
+                            <div class="feature-card anim-elem">
+                                <h3 style="display:flex; align-items:center; gap:10px;">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    Environmental Control
+                                </h3>
+                                <p>Continuously monitor and automatically regulate incubator air temperature and humidity.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3 style="display:flex; align-items:center; gap:10px;">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                    Physiological Tracking
+                                </h3>
+                                <p>Monitor the infant's core body temperature and precise weight changes continuously.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3 style="display:flex; align-items:center; gap:10px;">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    Hazard Detection
+                                </h3>
+                                <p>Assess air quality (MQ135) and environmental noise levels (LM386) to prevent neonatal stress.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3 style="display:flex; align-items:center; gap:10px;">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+                                    IoT Connectivity
+                                </h3>
+                                <p>Transmit all sensor readings wirelessly to a dedicated mobile application for remote tracking.</p>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Right Column: Interactive 3D CSS Model -->
-                    <div class="anim delay-1" id="vita-3d-scene" style="
-                        width:100%; height:100%; min-height:420px;
-                        display:flex; flex-direction:column;
-                        justify-content:center; align-items:center;
-                        perspective:1100px; cursor:grab;
-                        position:relative; user-select:none;
-                    ">
-                        <!-- GLASSY ISOLATION BACKDROP -->
-                        <div id="device-studio-backdrop" style="
-                            position: absolute;
-                            top: 50%; left: 50%;
-                            transform: translate(-50%, -50%);
-                            width: 380px; height: 460px;
-                            border-radius: 30px;
-                            z-index: 0; pointer-events: none;
-                            display: flex; justify-content: center; align-items: center;
-                            overflow: hidden;
-                            background: rgba(10, 15, 30, 0.6);
-                            backdrop-filter: blur(20px);
-                            -webkit-backdrop-filter: blur(20px);
-                            border: 1px solid rgba(255, 255, 255, 0.15);
-                            box-shadow: 0 20px 40px rgba(0,0,0,0.3), inset 0 0 30px rgba(0, 242, 254, 0.15);
-                        ">
-                            <div class="studio-glow" style="
-                                position: absolute;
-                                width: 300px; height: 300px;
-                                border-radius: 50%;
-                                background: radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
-                                z-index: 2;
-                            "></div>
-                            <div class="studio-floor" style="
-                                position:absolute; bottom:0; left:0; width:100%; height:40%;
-                                background: linear-gradient(to top, rgba(255,255,255,0.08), transparent);
-                                border-top: 1px solid rgba(255,255,255,0.05);
-                                z-index: 3;
-                            "></div>
+            <!-- Slide 6: Proposed Solution -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">The Proposed Solution</h2>
+                            <h3 class="slide-subtitle anim-elem">A Smart Upgrade Kit</h3>
+                            <p class="anim-elem">We developed a modular, plug-and-play electronics suite that attaches to conventional incubators.</p>
+                            <ul>
+                                <li class="anim-elem"><strong>Cost-Effective:</strong> Avoids the need to purchase entirely new incubator units.</li>
+                                <li class="anim-elem"><strong>Comprehensive:</strong> Merges 5 different sensing modalities into one dashboard.</li>
+                                <li class="anim-elem"><strong>Fail-Safe:</strong> Includes local LCD and buzzer alarms that function even if Wi-Fi drops.</li>
+                            </ul>
                         </div>
-                        
-                        <!-- PERFECT MATH HIGH-FIDELITY CSS 3D DEVICE -->
-                        <div id="vita-3d-card" style="z-index: 10; 
-                            width:260px; height:320px;
-                            position:relative;
-                            transform-style:preserve-3d;
-                            animation:deviceSpin 18s linear infinite;
-                            transition:transform 0.12s ease;
-                        ">
-                            <!-- 1. MAIN BODY FRONT (w:260, h:320, z:70) -->
-                            <div style="position:absolute; width:260px; height:320px; top:0; left:0;
-                                transform:translateZ(70px);
-                                background:#eef2f5;
-                                border-radius:6px;
-                                box-shadow:inset 0 0 10px rgba(0,0,0,0.05);
-                                transform-style:preserve-3d;
-                                overflow:hidden;">
-                                <img src="images/vita_flat_base.png?v=2" style="position:absolute; width:100%; height:100%; object-fit:contain; transform:scale(1.05); z-index:1;">
+                        <div class="image-container anim-img" style="background: var(--bg-primary); padding: 4rem;">
+                            <!-- Hardware Icon -->
+                            <svg fill="none" stroke="var(--accent-teal)" viewBox="0 0 24 24" style="width:100%; height:100%; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: System Architecture -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">System Architecture</h2>
+                            <h3 class="slide-subtitle anim-elem">4-Layer Design Philosophy</h3>
+                            <ul>
+                                <li class="anim-elem"><strong>1. Sensing Layer:</strong> DHT22, DS18B20, MQ135, LM386, and Load Cell gather raw data.</li>
+                                <li class="anim-elem"><strong>2. Processing Layer:</strong> Arduino UNO acts as the core, executing logic.</li>
+                                <li class="anim-elem"><strong>3. Actuation Layer:</strong> SSR controls AC heating; Fans manage humidity.</li>
+                                <li class="anim-elem"><strong>4. Interface Layer:</strong> LCD, Alarms, and ESP32 Wi-Fi gateway to the app.</li>
+                            </ul>
+                        </div>
+                        <div class="anim-img mermaid-container">
+                            <div class="mermaid">
+                                graph TD
+                                    A[Sensors] -->|Data| B(Arduino UNO)
+                                    B -->|UART| C[ESP32 Gateway]
+                                    B -->|Control| D[SSR / Heater / Fan]
+                                    B -->|I2C| E[LCD & Alarms]
+                                    C -->|Wi-Fi| F((Neo Care App))
+                                    style B fill:#0ea5e9,stroke:#fff,stroke-width:2px,color:#fff
+                                    style C fill:#14b8a6,stroke:#fff,stroke-width:2px,color:#fff
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Hardware Components Overview -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="image-container anim-img" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 20px; background: #fff; align-items: center; justify-content: center;">
+                            <img src="images/arduino.png" style="width: 45%; height: 45%; object-fit: contain;">
+                            <img src="images/esp32.png" style="width: 45%; height: 45%; object-fit: contain;">
+                            <img src="images/dht22.png" style="width: 45%; height: 45%; object-fit: contain;">
+                            <img src="images/ds18b20.png" style="width: 45%; height: 45%; object-fit: contain;">
+                        </div>
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Hardware Overview</h2>
+                            <h3 class="slide-subtitle anim-elem">Core Modules</h3>
+                            <ul>
+                                <li class="anim-elem"><strong>Microcontrollers:</strong> Arduino UNO & ESP32-CAM.</li>
+                                <li class="anim-elem"><strong>Sensors:</strong> DHT22, DS18B20, MQ135, LM386, Load cell with HX711 Amplifier.</li>
+                                <li class="anim-elem"><strong>Actuators:</strong> Solid-State Relay (SSR), DC Ventilation Fan.</li>
+                                <li class="anim-elem"><strong>Interface:</strong> 16x4 I2C LCD Display, 5V Buzzer, LED Indicators, Push Button.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Justification - Microcontrollers -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Hardware Specifications</h2>
+                        <h3 class="slide-subtitle anim-elem">Processing: Arduino UNO & ESP32</h3>
+                        <div class="justification-card anim-elem">
+                            <div class="component-img-container">
+                                <img src="images/arduino.png" class="component-img" alt="Arduino UNO">
+                                <img src="images/esp32.png" class="component-img" alt="ESP32">
+                            </div>
+                            <div class="justification-text">
+                                <h3>Dual-Processor Architecture</h3>
+                                <p><strong>Arduino UNO (ATmega328P):</strong> Chosen for its robust 5V logic which interfaces perfectly with relays and analog sensors. It operates at 16MHz and handles life-critical sensor polling and actuator control continuously, ensuring the core medical functions never freeze.</p>
+                                <div class="specs-list"><span>Arduino Specs:</span> 5V Operating Voltage | 14 Digital I/O | 6 Analog Inputs</div>
                                 
-                                <!-- Small Embossed VITA Logo (Top Left - Opposite to right LEDs) -->
-                                <div style="
-                                    position:absolute; 
-                                    top: 18px; left: 20px; 
-                                    font-size: 1.1rem; font-weight: 900; 
-                                    color: #eef2f5; 
-                                    font-family: 'Space Grotesk', sans-serif; 
-                                    letter-spacing: 2px;
-                                    text-shadow: 
-                                        -1px -1px 1px rgba(255,255,255,0.9), 
-                                         1px  1px 2px rgba(0,0,0,0.3);
-                                    z-index: 2;
-                                ">VITA</div>
+                                <p style="margin-top:1rem;"><strong>ESP32:</strong> Acts as a dedicated high-speed communication gateway. Operating at 240MHz with built-in Wi-Fi, it offloads all network tasks from the Arduino, preventing network latency from delaying the heating control loop.</p>
+                                <div class="specs-list"><span>ESP32 Specs:</span> 3.3V Logic | Built-in Wi-Fi 802.11 b/g/n | Dual-Core Tensilica LX6</div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <!-- 2. MAIN BODY BACK (w:260, h:320, z:-70) -->
-                            <div style="position:absolute; width:260px; height:320px; top:0; left:0;
-                                transform:rotateY(180deg) translateZ(70px);
-                                background:linear-gradient(135deg, #f8f9fa, #e9ecef);
-                                border-radius:6px;
-                                box-shadow:inset 0 0 15px rgba(0,0,0,0.03);">
+            <!-- Slide 10: Justification - Temp & Humidity -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Hardware Specifications</h2>
+                        <h3 class="slide-subtitle anim-elem">Environmental: DHT22 & DS18B20</h3>
+                        <div class="justification-card anim-elem">
+                            <div class="component-img-container">
+                                <img src="images/dht22.png" class="component-img" alt="DHT22">
+                                <img src="images/ds18b20.png" class="component-img" alt="DS18B20">
                             </div>
-
-                            <!-- 3. MAIN BODY RIGHT SIDE (w:140, h:320, x:130) -->
-                            <!-- To center: left = (260 - 140)/2 = 60 -->
-                            <div style="position:absolute; width:140px; height:320px; top:0; left:60px;
-                                transform:rotateY(90deg) translateZ(130px);
-                                background:#e9ecef;
-                                transform-style:preserve-3d;">
+                            <div class="justification-text">
+                                <h3>Precision Thermoregulation</h3>
+                                <p><strong>DHT22 (Ambient Temp & Hum):</strong> Provides pre-calibrated digital outputs. It offers exceptional long-term stability and accuracy compared to the cheaper DHT11, which is crucial for preventing neonatal hypothermia.</p>
+                                <div class="specs-list"><span>DHT22 Specs:</span> Temp Range: -40 to 80°C (±0.5°C) | Hum Range: 0-100% (±2%)</div>
                                 
-                                <!-- PHYSICAL 3D BUMP EXTRUSION -->
-                                <!-- Bump dimensions: width(depth of main):60px, height:150px, sticks out by 26px -->
-                                <!-- Center on right face: left=(140-60)/2=40, top=(320-150)/2=85 -->
-                                <div style="
-                                    position:absolute;
-                                    top:25px; left:40px;
-                                    width:60px; height:150px;
-                                    transform:translateZ(13px); /* Half of 26px depth */
-                                    transform-style:preserve-3d;
-                                ">
-                                    <!-- Bump Right (Faces outward) -->
-                                    <div style="position:absolute; width:60px; height:150px; top:0; left:0;
-                                        transform:translateZ(13px);
-                                        background:#eef2f5;
-                                        border-radius:3px;
-                                        box-shadow:inset 0 0 5px rgba(0,0,0,0.05);"></div>
-                                        
-                                    <!-- Bump Rear edge (Faces back globally, so right locally) -->
-                                    <!-- left=(60-26)/2=17 -->
-                                    <div style="position:absolute; width:26px; height:150px; top:0; left:17px;
-                                        transform:rotateY(90deg) translateZ(30px);
-                                        background:#cfd3d9;"></div>
-                                        
-                                    <!-- Bump Front edge (Faces front globally, so left locally) -->
-                                    <div style="position:absolute; width:26px; height:150px; top:0; left:17px;
-                                        transform:rotateY(-90deg) translateZ(30px);
-                                        background:#f8f9fa;"></div>
-                                        
-                                    <!-- Bump Top -->
-                                    <!-- top=(150-26)/2 = 62 -->
-                                    <div style="position:absolute; width:60px; height:26px; top:62px; left:0;
-                                        transform:rotateX(90deg) translateZ(75px);
-                                        background:#fff;"></div>
-                                        
-                                    <!-- Bump Bottom -->
-                                    <div style="position:absolute; width:60px; height:26px; top:62px; left:0;
-                                        transform:rotateX(-90deg) translateZ(75px);
-                                        background:#aeb4b9;"></div>
-                                </div>
-                            </div>
-
-                            <!-- 4. MAIN BODY LEFT SIDE (w:140, h:320, x:-130) -->
-                            <div style="position:absolute; width:140px; height:320px; top:0; left:60px;
-                                transform:rotateY(-90deg) translateZ(130px);
-                                background:linear-gradient(to right, #cfd3d9, #dfe3e8);">
-                            </div>
-
-                            <!-- 5. MAIN BODY TOP (w:260, h:140, y:-160) -->
-                            <div class="vita-bump-face vita-bump-top" style="position:absolute; width:260px; height:140px; top:90px; left:0;
-                                transform:rotateX(90deg) translateZ(160px);
-                                background:#f8f9fa;">
-                            </div>
-
-                            <!-- 6. MAIN BODY BOTTOM (w:260, h:140, y:160) -->
-                            <div class="vita-bump-face vita-bump-bottom" style="position:absolute; width:260px; height:140px; top:90px; left:0;
-                                transform:rotateX(-90deg) translateZ(160px);
-                                background:#b0b5ba;">
-                            </div>
-
-                        </div> <!-- /vita-3d-card -->
-                    </div> <!-- /vita-3d-scene -->
-                </div> <!-- /container grid-2 -->
-            </div> <!-- /swiper-slide -->
-
-            <!-- 12. Testing -->
-            <div class="swiper-slide">
-                <div class="container" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:0.8rem;">
-                    <h2 class="section-title anim" style="text-align:center; margin-bottom:0.2rem;">Testing & <span class="text-gradient">Validation</span></h2>
-                    <p class="text-muted anim delay-1" style="text-align:center; font-size:0.8rem; margin-bottom:0.5rem;">Live VITA GUI Simulation — matching the real device interface</p>
-
-                    <!-- VITA GUI Simulator -->
-                    <div class="anim delay-1" id="vita-gui" style="
-                        width:100%; max-width:820px;
-                        background:#000;
-                        border-radius:10px;
-                        border:2px solid #1a3a5c;
-                        overflow:hidden;
-                        box-shadow: 0 0 40px rgba(0,150,255,0.15);
-                        font-family: 'Courier New', monospace;
-                    ">
-                        <!-- Top Bar -->
-                        <div style="display:grid; grid-template-columns:1fr 2fr 1fr; background:#0a0f1e; border-bottom:1px solid #1a3a5c;">
-                            <!-- VITAL SIGNS Panel -->
-                            <div style="padding:8px 10px; border-right:1px solid #1a3a5c;">
-                                <div style="color:#00d4ff; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-align:center; margin-bottom:8px; border-bottom:1px solid #1a3a5c; padding-bottom:5px;">VITAL SIGNS</div>
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex; align-items:center; gap:5px; margin-bottom:1px;">
-                                        <span style="font-size:0.9rem;">🌡️</span>
-                                        <span style="color:#aaa; font-size:0.55rem;">Temperature</span>
-                                    </div>
-                                    <div id="vs-temp" style="color:#fff; font-size:0.9rem; font-weight:700; padding-left:20px;">26.8 °C</div>
-                                </div>
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex; align-items:center; gap:5px; margin-bottom:1px;">
-                                        <span style="font-size:0.9rem;">❤️</span>
-                                        <span style="color:#aaa; font-size:0.55rem;">Heart Rate</span>
-                                    </div>
-                                    <div id="vs-hr" style="color:#fff; font-size:0.9rem; font-weight:700; padding-left:20px;">72 BPM</div>
-                                </div>
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex; align-items:center; gap:5px; margin-bottom:1px;">
-                                        <span style="font-size:0.9rem;">💧</span>
-                                        <span style="color:#aaa; font-size:0.55rem;">SPO2</span>
-                                    </div>
-                                    <div id="vs-spo2" style="color:#fff; font-size:0.9rem; font-weight:700; padding-left:20px;">98.5 %</div>
-                                </div>
-                                <div style="margin-bottom:6px;">
-                                    <div style="display:flex; align-items:center; gap:5px; margin-bottom:1px;">
-                                        <span style="font-size:0.9rem;">🩺</span>
-                                        <span style="color:#aaa; font-size:0.55rem;">Blood Pressure</span>
-                                    </div>
-                                    <div id="vs-bp" style="color:#fff; font-size:0.9rem; font-weight:700; padding-left:20px;">120/80</div>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
-                                    <div id="ecg-dot" style="width:9px; height:9px; border-radius:50%; background:#00ff88;"></div>
-                                    <span style="color:#aaa; font-size:0.6rem;">ECG Connected</span>
-                                </div>
-                            </div>
-
-                            <!-- ECG LIVE MONITOR -->
-                            <div style="padding:8px 10px; border-right:1px solid #1a3a5c; display:flex; flex-direction:column;">
-                                <div style="color:#00d4ff; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-align:center; margin-bottom:6px; border-bottom:1px solid #1a3a5c; padding-bottom:5px;">ECG LIVE MONITOR</div>
-                                <canvas id="ecg-canvas" width="480" height="120" style="width:100%; height:120px; display:block;"></canvas>
-                            </div>
-
-                            <!-- CONTROLS -->
-                            <div style="padding:8px 10px; display:flex; flex-direction:column;">
-                                <div style="color:#00d4ff; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-align:center; margin-bottom:8px; border-bottom:1px solid #1a3a5c; padding-bottom:5px;">CONTROLS</div>
-                                <button onclick="vitaSimLogin()" style="background:#00aa44; color:#fff; border:none; border-radius:5px; padding:8px; font-size:0.7rem; font-weight:700; cursor:pointer; margin-bottom:5px; letter-spacing:1px; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">LOGOUT</button>
-                                <button onclick="vitaSimDesktop()" style="background:#1a5c2a; color:#fff; border:none; border-radius:5px; padding:8px; font-size:0.7rem; font-weight:700; cursor:pointer; margin-bottom:5px; letter-spacing:1px; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">DESKTOP</button>
-                                <button onclick="vitaSimRestart()" style="background:#b8860b; color:#fff; border:none; border-radius:5px; padding:8px; font-size:0.7rem; font-weight:700; cursor:pointer; margin-bottom:5px; letter-spacing:1px; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">RESTART</button>
-                                <button onclick="vitaSimShutdown()" style="background:#cc0000; color:#fff; border:none; border-radius:5px; padding:8px; font-size:0.7rem; font-weight:700; cursor:pointer; letter-spacing:1px; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">SHUTDOWN</button>
+                                <p style="margin-top:1rem;"><strong>DS18B20 (Infant Body Temp):</strong> A digital thermometer utilizing the 1-Wire bus. Because it sends data digitally, it is completely immune to electrical noise from AC heaters and motors, ensuring perfect body temperature readings.</p>
+                                <div class="specs-list"><span>DS18B20 Specs:</span> Temp Range: -55°C to +125°C | Accuracy: ±0.5°C | Waterproof</div>
                             </div>
                         </div>
-
-                        <!-- CRITICAL Alert Bar -->
-                        <div id="critical-bar" style="background:#cc0000; padding:5px 12px; display:flex; align-items:center; gap:8px;">
-                            <span style="background:#fff; color:#cc0000; font-size:0.6rem; font-weight:900; padding:2px 6px; border-radius:3px; letter-spacing:1px;">CRITICAL:</span>
-                            <span id="critical-msg" style="color:#fff; font-size:0.65rem; font-weight:600;">Normal — All vitals within range</span>
-                        </div>
-
-                        <!-- Medical Recommendation -->
-                        <div style="background:#0a1628; padding:5px 12px; border-top:1px solid #1a3a5c;">
-                            <span style="color:#00d4ff; font-size:0.6rem; font-weight:700;">MEDICAL RECOMMENDATION: </span>
-                            <span id="med-rec" style="color:#ccc; font-size:0.6rem;">Continue monitoring. Patient vitals stable.</span>
-                        </div>
-                    </div>
-
-                    <!-- Sim Controls -->
-                    <div class="anim delay-2" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-                        <button onclick="vitaTrigger('normal')" style="background:rgba(0,200,100,0.15); border:1px solid #00c864; color:#00c864; border-radius:20px; padding:5px 14px; font-size:0.7rem; cursor:pointer;">✓ Normal</button>
-                        <button onclick="vitaTrigger('tachycardia')" style="background:rgba(255,165,0,0.15); border:1px solid #ffa500; color:#ffa500; border-radius:20px; padding:5px 14px; font-size:0.7rem; cursor:pointer;">⚡ Tachycardia</button>
-                        <button onclick="vitaTrigger('low_spo2')" style="background:rgba(100,150,255,0.15); border:1px solid #6496ff; color:#6496ff; border-radius:20px; padding:5px 14px; font-size:0.7rem; cursor:pointer;">💧 Low SpO2</button>
-                        <button onclick="vitaTrigger('fever')" style="background:rgba(255,80,80,0.15); border:1px solid #ff5050; color:#ff5050; border-radius:20px; padding:5px 14px; font-size:0.7rem; cursor:pointer;">🌡️ Fever</button>
-                        <button onclick="vitaTrigger('critical')" style="background:rgba(255,0,0,0.2); border:1px solid #ff0000; color:#ff0000; border-radius:20px; padding:5px 14px; font-size:0.7rem; cursor:pointer;">🚨 CRITICAL</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 12.5 Clinical Accuracy Chart -->
-            <div class="swiper-slide" id="slide-accuracy">
-                <div class="container grid-2">
-                    <div class="anim" style="width:100%; min-height:380px; display:flex; flex-direction:column; justify-content:center; align-items:center; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:20px; padding:20px;">
-                        <canvas id="accuracyChart" style="max-height:360px;"></canvas>
-                    </div>
-                    <div class="glass-panel anim delay-1" data-tilt>
-                        <h2 class="section-title" style="margin-bottom:1.5rem; text-align:left;">Clinical <span class="text-gradient">Accuracy</span></h2>
-                        <ul class="cyber-list">
-                            <li><i class="ph-fill ph-chart-line-up"></i> Benchmarked against Gold Standard ICU monitors in controlled tests.</li>
-                            <li><i class="ph-fill ph-heartbeat"></i> Heart Rate: <strong style="color:var(--primary)">99.2%</strong> correlation (±1 BPM margin).</li>
-                            <li><i class="ph-fill ph-drop"></i> SpO2: <strong style="color:var(--primary)">98.7%</strong> correlation (±1.5% margin).</li>
-                            <li><i class="ph-fill ph-thermometer"></i> Temperature variance: less than <strong style="color:var(--primary)">0.2°C</strong>.</li>
-                        </ul>
-                        <p class="text-muted" style="margin-top:20px; font-size:0.82rem;">* Simulated validation results demonstrating clinical readiness level.</p>
+            <!-- Slide 11: Justification - Weight -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Hardware Specifications</h2>
+                        <h3 class="slide-subtitle anim-elem">Measurement: HX711 & Load Cell</h3>
+                        <div class="justification-card anim-elem">
+                            <div class="component-img-container">
+                                <img src="images/loadcell.svg" class="component-img" alt="Load Cell">
+                                <img src="images/hx711.svg" class="component-img" alt="HX711">
+                            </div>
+                            <div class="justification-text">
+                                <h3>Micro-Weight Tracking</h3>
+                                <p><strong>Aluminum Load Cell (20kg):</strong> Placed securely under the incubator mattress. It converts physical pressure into an electrical resistance change (strain gauge) to track the neonate's growth.</p>
+                                <p style="margin-top:1rem;"><strong>HX711 Amplifier:</strong> The resistance change from the load cell is in millivolts, far too small for the Arduino to read. The HX711 is a precision 24-bit Analog-to-Digital Converter designed specifically for weigh scales, allowing us to detect weight fluctuations down to the gram without removing the infant from the incubator.</p>
+                                <div class="specs-list"><span>HX711 Specs:</span> 24-bit high precision ADC | Selectable Gain (32, 64, 128) | I2C-like interface</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 12.7 Cost Analysis -->
+            <!-- Slide 12: Justification - Air & Sound -->
             <div class="swiper-slide">
-                <div class="container grid-2">
-                    <div class="glass-panel anim" data-tilt style="padding: 2rem;">
-                        <h3 class="space-font" style="color:var(--primary); margin-bottom:1.5rem; font-size:1.2rem;"><i class="ph-fill ph-scales" style="margin-right:8px;"></i>Market Comparison</h3>
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Hardware Specifications</h2>
+                        <h3 class="slide-subtitle anim-elem">Hazard Detection: MQ135 & LM386</h3>
+                        <div class="justification-card anim-elem">
+                            <div class="component-img-container">
+                                <img src="images/mq135.svg" class="component-img" alt="MQ135">
+                                <img src="images/lm386.svg" class="component-img" alt="LM386">
+                            </div>
+                            <div class="justification-text">
+                                <h3>Holistic Hazard Detection</h3>
+                                <p><strong>MQ135 (Air Quality):</strong> Standard incubators monitor oxygen, but the MQ135 detects harmful gases like ammonia, CO2, benzene, and alcohol vapors. This protects the infant's respiratory system from airborne cleaning chemicals.</p>
+                                <div class="specs-list"><span>MQ135 Specs:</span> Target gases: NH3, NOx, Alcohol, CO2 | Analog output proportional to gas concentration</div>
+                                
+                                <p style="margin-top:1rem;"><strong>LM386 (Sound Sensor):</strong> The rapidly developing cochlear pathways of a neonate are sensitive to noise (>45dB causes stress). This sensor features an adjustable gain amplifier acting as an acoustic sentinel to alert staff of excessive ambient noise.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 13: Justification - Actuation -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Hardware Specifications</h2>
+                        <h3 class="slide-subtitle anim-elem">Actuation: Solid-State Relay (SSR)</h3>
+                        <div class="justification-card anim-elem">
+                            <div class="component-img-container">
+                                <img src="images/ssr.svg" class="component-img" alt="SSR" style="height: 250px;">
+                            </div>
+                            <div class="justification-text">
+                                <h3>Silent & Safe AC Switching</h3>
+                                <p>To control the high-voltage AC heater, we explicitly selected a <strong>Solid-State Relay (SSR)</strong> instead of a traditional mechanical electromagnetic relay.</p>
+                                <p style="margin-top:1rem;"><strong>Clinical Benefit:</strong> Mechanical relays produce a loud "clicking" sound when switching, inducing acoustic stress in neonates. SSRs use internal opto-couplers to switch loads completely silently. Furthermore, SSRs generate zero electrical arcing (sparking) inside the oxygen-rich incubator environment, eliminating fire hazards.</p>
+                                <div class="specs-list"><span>SSR Specs:</span> Input: 3-32V DC | Output: 24-380V AC | Zero-Cross Switching | Complete Opto-Isolation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 14: Software Implementation -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Software Architecture</h2>
+                            <h3 class="slide-subtitle anim-elem">Embedded Logic</h3>
+                            <ul>
+                                <li class="anim-elem"><strong>Environment:</strong> Developed entirely in Arduino IDE using C/C++.</li>
+                                <li class="anim-elem"><strong>Libraries:</strong> `DHT.h`, `OneWire.h`, `DallasTemperature.h`, `HX711.h`, and `LiquidCrystal_I2C.h` streamline hardware interfacing.</li>
+                                <li class="anim-elem"><strong>Control Loop:</strong> The main `loop()` continuously polls sensors without using blocking delays (`millis()` timing), ensuring instant alarm response.</li>
+                                <li class="anim-elem"><strong>Calibration:</strong> Sensor offsets (e.g., subtracting 500g for mattress weight) are handled directly in software.</li>
+                            </ul>
+                        </div>
+                        <div class="image-container anim-img" style="background: var(--bg-primary); padding: 4rem;">
+                            <!-- Code Icon -->
+                            <svg fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24" style="width:100%; height:100%; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 15: Alarm System -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper text-content" style="align-items: center; text-align: center;">
+                        <h2 class="slide-title anim-elem">Alarm & Notification System</h2>
+                        <h3 class="slide-subtitle anim-elem">Fail-Safe Emergency Response</h3>
+                        <div class="feature-grid" style="text-align: left; margin-top: 2rem; width: 100%;">
+                            <div class="feature-card anim-elem">
+                                <h3>Threshold Logic</h3>
+                                <p>Temp < 26°C or > 35°C. Humidity < 50% or > 60%. Noise > 600. Air Quality > 500 PPM.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3>Local Indicators</h3>
+                                <p>A flashing Red LED and a piercing 1500Hz Buzzer tone activate instantly upon fault detection.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3>LCD Diagnosis</h3>
+                                <p>The 16x4 I2C LCD dynamically overwrites the screen to show the exact source of the error (e.g., "!! DANGER: High Temp !!").</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3>Mute Protocol</h3>
+                                <p>A physical hardware push-button allows nurses to silence the buzzer, but the Red LED remains ON until the physical fault is fully cleared.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 16: IoT & Communication -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="image-container anim-img">
+                            <img src="images/app.png" class="image-cover" alt="Neo Care App">
+                        </div>
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">IoT Integration</h2>
+                            <h3 class="slide-subtitle anim-elem">The Neo Care App</h3>
+                            <p class="anim-elem">We decouple the critical life-support logic from the internet using UART communication. The Arduino sends a string of sensor values to the ESP32.</p>
+                            <ul>
+                                <li class="anim-elem"><strong>Wi-Fi Connectivity:</strong> ESP32 connects to the hospital's local network using TCP/IP protocol.</li>
+                                <li class="anim-elem"><strong>Web Service:</strong> Data is pushed via HTTP to a cloud database.</li>
+                                <li class="anim-elem"><strong>Mobile Application:</strong> Doctors can view live temperature graphs, weight logs, and receive instant push notifications if an alarm triggers, from anywhere in the world.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 17: Testing & Validation -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Testing & Validation</h2>
+                            <h3 class="slide-subtitle anim-elem">Ensuring Reliability</h3>
+                            <ul>
+                                <li class="anim-elem"><strong>Sensor Calibration:</strong> The MQ135 was pre-heated for 24 hours and base-lined in fresh air (180 reading). The Load Cell was calibrated using standard known weights (2.5kg, 3.0kg).</li>
+                                <li class="anim-elem"><strong>Unit Testing:</strong> Each of the hardware subsystems was tested individually before final integration.</li>
+                                <li class="anim-elem"><strong>Stress Testing:</strong> Intentional fault injection (e.g., heating the DS18B20 manually, introducing noise) successfully triggered the alarms in under 2 seconds.</li>
+                            </ul>
+                        </div>
+                        <div class="image-container anim-img" style="background: var(--bg-primary); padding: 4rem;">
+                            <svg fill="none" stroke="var(--accent-teal)" viewBox="0 0 24 24" style="width:100%; height:100%; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 18: Results & Discussion -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper" style="justify-content: center;">
+                        <h2 class="slide-title anim-elem">Experimental Results</h2>
+                        <h3 class="slide-subtitle anim-elem">System Performance</h3>
+                        <div class="feature-grid">
+                            <div class="feature-card anim-elem">
+                                <h3>Thermal Stability</h3>
+                                <p>The SSR effectively cycled the heater ON at < 26°C and OFF > 35°C, maintaining the desired thermal envelope without fail.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3>Weight Accuracy</h3>
+                                <p>The HX711 and Load cell achieved an impressive error margin of just ±0.01 kg (10 grams) across multiple tests.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3>Communication Latency</h3>
+                                <p>Average response time from physical fault detection to the ESP32 firing a mobile notification was measured at ~1-2 seconds.</p>
+                            </div>
+                            <div class="feature-card anim-elem">
+                                <h3>Body Temp Precision</h3>
+                                <p>DS18B20 digital readings perfectly matched clinical reference thermometers with a maximum deviation of 0.1°C.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 19: Future Work -->
+            <div class="swiper-slide">
+                <div class="glass-panel">
+                    <div class="content-wrapper grid-2">
+                        <div class="image-container anim-img" style="background: var(--bg-primary); padding: 4rem;">
+                            <svg fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24" style="width:100%; height:100%; opacity:0.8;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <div class="text-content">
+                            <h2 class="slide-title anim-elem">Future Recommendations</h2>
+                            <h3 class="slide-subtitle anim-elem">Additional Biomedical Monitoring</h3>
+                            <ul>
+                                <li class="anim-elem" style="font-size: 1.15rem; line-height: 1.4;"><strong>Heart Rate Monitoring:</strong> Continuously measure pulse rate in real time for early detection of cardiac abnormalities such as bradycardia or tachycardia.</li>
+                                <li class="anim-elem" style="font-size: 1.15rem; line-height: 1.4;"><strong>Respiratory Rate Monitoring:</strong> Continuously measure breathing rate to facilitate early detection of respiratory distress, apnea episodes, or irregular breathing patterns.</li>
+                                <li class="anim-elem" style="font-size: 1.15rem; line-height: 1.4;"><strong>Electrocardiogram (ECG):</strong> Incorporate an ECG module to monitor electrical heart activity, providing valuable diagnostic information regarding cardiac function.</li>
+                                <li class="anim-elem" style="font-size: 1.15rem; line-height: 1.4;"><strong>Pulse Oximetry (SpO2):</strong> Integrate an oxygen saturation sensor to monitor blood oxygen levels, significantly improving the overall physiological assessment of the newborn.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 20: The Team -->
+            <div class="swiper-slide">
+                <div class="glass-panel" style="padding: 2rem;">
+                    <div class="content-wrapper text-content" style="align-items: center; text-align: center;">
+                        <h2 class="slide-title anim-elem" style="font-size: 3rem;">The Team</h2>
+                        <h3 class="slide-subtitle anim-elem" style="margin-bottom: 1rem;">Menoufia University - 2025/2026</h3>
                         
-                        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:10px;">
-                            <span style="color:#aaa; font-size:0.9rem;">Commercial Patient Monitors</span>
-                            <span style="color:#ff5f56; font-weight:bold; font-family:monospace; font-size:1rem;">$1,500 - $5,000+</span>
+                        <!-- Formatted Names Grid -->
+                        <div class="team-grid anim-elem">
+                            <div class="team-member">Mohamed Khaled Zahran</div>
+                            <div class="team-member">Fedaa Asem Rabie</div>
+                            <div class="team-member">Nada Afify Abd Almotaleb</div>
+                            <div class="team-member">Hana Mohammed Hegazy</div>
+                            <div class="team-member">Amal Abdo Ragh</div>
+                            
+                            <div class="team-member">Mariam Sherif Hegazy</div>
+                            <div class="team-member">AbdElrahman Tarek Eldegwy</div>
+                            <div class="team-member">Moamen Waleed Basiony</div>
+                            <div class="team-member">Mohammed El-sayed Heikal</div>
+                            <div class="team-member">Abdullah Ali AbdElfattah</div>
+                            
+                            <div class="team-member">Basem Hatem Awad</div>
+                            <div class="team-member">Ahmed Mohammed Lotfy</div>
+                            <div class="team-member">Khaled Rizk Ebrahim</div>
+                            <div class="team-member">Ahmed Tarek Elsmlehy</div>
+                            <div class="team-member">Ahmed Hassan Saad</div>
                         </div>
-                        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
-                            <span style="color:#aaa; font-size:0.9rem;">VITA Prototype Cost</span>
-                            <span style="color:#27c93f; font-weight:bold; font-family:monospace; font-size:1.1rem;">~ $450</span>
+                        
+                        <div class="supervisors-box anim-elem">
+                            <h3 style="color: var(--accent-teal); font-size: 1.2rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">Under the Supervision of</h3>
+                            <div style="display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;">
+                                <div>
+                                    <p style="font-size: 1.4rem; font-weight: 800; color: var(--accent-blue);">Prof. Dr. Yasser Ramah</p>
+                                    <p style="color: var(--text-light);">Dean of the Faculty</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 1.4rem; font-weight: 800; color: var(--accent-blue);">Prof. Dr. Ghada El-Banby</p>
+                                    <p style="color: var(--text-light);">Head of Biomedical Equipment Tech Dept.</p>
+                                </div>
+                                <div>
+                                    <p style="font-size: 1.4rem; font-weight: 800; color: var(--accent-blue);">Prof. Dr. Belal Ahmed Abo Zalam</p>
+                                    <p style="color: var(--text-light);">Project Supervisor</p>
+                                </div>
+                            </div>
                         </div>
-
-                        <h3 class="space-font" style="color:var(--secondary); margin-bottom:1rem; font-size:1.1rem;"><i class="ph-fill ph-chart-line-up" style="margin-right:8px;"></i>Economic Feasibility</h3>
-                        <ul class="cyber-list" style="font-size:0.85rem;">
-                            <li><i class="ph-fill ph-hospital"></i> <strong>Cost-Effective:</strong> Highly accessible for rural hospitals & clinics.</li>
-                            <li><i class="ph-fill ph-house"></i> <strong>Home Care:</strong> Affordable for personal patient monitoring at home.</li>
-                            <li><i class="ph-fill ph-factory"></i> <strong>Local Manufacturing:</strong> Utilizing 3D printing and open-source tech reduces reliance on imports.</li>
-                        </ul>
-                    </div>
-                    <div class="image-showcase anim delay-1" data-tilt style="display:flex; flex-direction:column; justify-content:center;">
-                        <h2 class="section-title" style="margin-bottom: 1.5rem; text-align:right;">Cost <span class="text-gradient">Feasibility</span></h2>
-                        <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80" alt="Finance" class="showcase-img" style="max-height:250px; width:auto; object-fit:contain; border-radius:12px; border:1px solid rgba(0,242,254,0.3); align-self:flex-end;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 13. Future Work -->
-            <div class="swiper-slide">
-                <div class="container">
-                    <h2 class="section-title anim" style="text-align:center;">Future <span class="text-gradient">Horizons</span></h2>
-                    <p class="text-muted anim delay-1" style="text-align:center; margin-bottom:2rem;">Planned enhancements beyond the current prototype</p>
-                    <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:1.2rem;" class="anim delay-1">
-                        <div class="glass-panel" data-tilt style="padding:1.5rem; text-align:center;">
-                            <i class="ph-fill ph-brain" style="font-size:2.5rem; color:var(--primary); margin-bottom:0.8rem; display:block;"></i>
-                            <h3 class="space-font" style="font-size:1rem; margin-bottom:0.5rem;">AI Analytics</h3>
-                            <p class="text-muted" style="font-size:0.8rem;">ML models for predictive analytics, forecasting patient deterioration before it happens.</p>
-                        </div>
-                        <div class="glass-panel" data-tilt style="padding:1.5rem; text-align:center;">
-                            <i class="ph-fill ph-cloud-arrow-up" style="font-size:2.5rem; color:var(--secondary); margin-bottom:0.8rem; display:block;"></i>
-                            <h3 class="space-font" style="font-size:1rem; margin-bottom:0.5rem;">IoT Cloud</h3>
-                            <p class="text-muted" style="font-size:0.8rem;">Remote access through secure cloud, allowing doctors to monitor patients from anywhere.</p>
-                        </div>
-                        <div class="glass-panel" data-tilt style="padding:1.5rem; text-align:center;">
-                            <i class="ph-fill ph-device-mobile" style="font-size:2.5rem; color:#f59e0b; margin-bottom:0.8rem; display:block;"></i>
-                            <h3 class="space-font" style="font-size:1rem; margin-bottom:0.5rem;">Mobile App</h3>
-                            <p class="text-muted" style="font-size:0.8rem;">Companion smartphone application for real-time alerts and patient history review.</p>
-                        </div>
-                        <div class="glass-panel" data-tilt style="padding:1.5rem; text-align:center;">
-                            <i class="ph-fill ph-battery-charging" style="font-size:2.5rem; color:#10b981; margin-bottom:0.8rem; display:block;"></i>
-                            <h3 class="space-font" style="font-size:1rem; margin-bottom:0.5rem;">Battery Power</h3>
-                            <p class="text-muted" style="font-size:0.8rem;">Add rechargeable battery for portable, uninterrupted monitoring in field conditions.</p>
-                        </div>
-                        <div class="glass-panel" data-tilt style="padding:1.5rem; text-align:center;">
-                            <i class="ph-fill ph-globe" style="font-size:2.5rem; color:#6366f1; margin-bottom:0.8rem; display:block;"></i>
-                            <h3 class="space-font" style="font-size:1rem; margin-bottom:0.5rem;">Multi-Language</h3>
-                            <p class="text-muted" style="font-size:0.8rem;">Arabic & English interface support for broader usability across Egyptian hospitals.</p>
-                        </div>
-                        <div class="glass-panel" data-tilt style="padding:1.5rem; text-align:center;">
-                            <i class="ph-fill ph-certificate" style="font-size:2.5rem; color:#f43f5e; margin-bottom:0.8rem; display:block;"></i>
-                            <h3 class="space-font" style="font-size:1rem; margin-bottom:0.5rem;">Certification</h3>
-                            <p class="text-muted" style="font-size:0.8rem;">Pursue medical device regulatory approval (FDA/CE) for clinical deployment.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 14. Conclusion / Results -->
-            <div class="swiper-slide">
-                <div class="container" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-                    <h2 class="section-title anim" style="text-align:center; margin-bottom:0.5rem;">Project <span class="text-gradient">Achievements</span></h2>
-                    <p class="text-muted anim delay-1" style="text-align:center; margin-bottom:2rem; font-size:0.9rem;">What VITA successfully delivered</p>
-
-                    <!-- Key Metrics -->
-                    <div class="anim delay-1" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; width:100%; margin-bottom:1.8rem;">
-                        <div style="text-align:center; background:rgba(0,242,254,0.08); border:1px solid rgba(0,242,254,0.25); border-radius:16px; padding:1.2rem 0.5rem;">
-                            <div style="font-size:2rem; font-weight:800; background:linear-gradient(135deg,#00f2fe,#4facfe); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">5</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Vital Signs<br>Measured</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.25); border-radius:16px; padding:1.2rem 0.5rem;">
-                            <div style="font-size:2rem; font-weight:800; background:linear-gradient(135deg,#a855f7,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">3</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Sensors<br>Integrated</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:16px; padding:1.2rem 0.5rem;">
-                            <div style="font-size:2rem; font-weight:800; background:linear-gradient(135deg,#10b981,#06b6d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">±2%</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">SpO2 Accuracy<br>vs Reference</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:16px; padding:1.2rem 0.5rem;">
-                            <div style="font-size:2rem; font-weight:800; background:linear-gradient(135deg,#f59e0b,#ef4444); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Real-Time</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">ECG Live<br>Monitoring</div>
-                        </div>
-                    </div>
-
-                    <!-- Conclusion Points -->
-                    <div class="anim delay-2" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; width:100%;">
-                        <div class="glass-panel" style="padding:1.2rem 1.5rem;">
-                            <ul class="cyber-list" style="margin:0;">
-                                <li><i class="ph-fill ph-check-circle" style="color:#10b981;"></i> Successfully monitors HR, SpO2, ECG, Temperature & BP</li>
-                                <li><i class="ph-fill ph-check-circle" style="color:#10b981;"></i> Real-time alerts with clinical threshold comparison</li>
-                                <li><i class="ph-fill ph-check-circle" style="color:#10b981;"></i> Local database stores full patient history</li>
-                            </ul>
-                        </div>
-                        <div class="glass-panel" style="padding:1.2rem 1.5rem;">
-                            <ul class="cyber-list" style="margin:0;">
-                                <li><i class="ph-fill ph-check-circle" style="color:#4facfe;"></i> Low-cost alternative to commercial monitors</li>
-                                <li><i class="ph-fill ph-check-circle" style="color:#4facfe;"></i> Fully 3D-printed compact medical enclosure</li>
-                                <li><i class="ph-fill ph-check-circle" style="color:#4facfe;"></i> Open-source, scalable & upgradeable platform</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 15. Thank You -->
-            <div class="swiper-slide">
-                <div class="container" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
-                    <div class="anim" style="margin-bottom:2rem;">
-                        <div style="display:flex; justify-content:center; gap:80px; margin-bottom:2rem;">
-                            <img src="images/logo_1.jpeg" alt="Logo 1" style="max-height:80px; width:auto; border-radius:12px; box-shadow:0 10px 20px rgba(0,0,0,0.4);">
-                            <img src="images/logo_2.jpeg" alt="Logo 2" style="max-height:80px; width:auto; border-radius:12px; box-shadow:0 10px 20px rgba(0,0,0,0.4);">
-                        </div>
-                        <div class="hero-badge" style="margin:0 auto 1.5rem;"><i class="ph-fill ph-heartbeat"></i> VITA — Smart Vital Signs Monitor</div>
-                        <h1 class="hero-title" style="font-size:clamp(3rem,8vw,5rem); margin-bottom:1rem;">
-                            Thank <span class="text-gradient">You</span>
-                        </h1>
-                        <p class="hero-subtitle" style="font-size:1.1rem; margin:0 auto 2.5rem;">
-                            Graduation Project 2026 · Faculty of Applied Health Sciences Technology<br>
-                            Technology of Biomedical Equipment
-                        </p>
-                    </div>
-                    <div class="anim delay-2" style="display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;">
-                        <div class="glass-panel" style="padding:1rem 2rem; text-align:center; min-width:200px;">
-                            <i class="ph-fill ph-chats" style="font-size:1.5rem; color:var(--primary); display:block; margin-bottom:0.5rem;"></i>
-                            <div style="font-size:0.85rem; color:var(--text-muted);">Questions & Answers</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; opacity:0.7;">We welcome your feedback</div>
-                        </div>
-                        <div class="glass-panel" style="padding:1rem 2rem; text-align:center; min-width:200px;">
-                            <i class="ph-fill ph-users" style="font-size:1.5rem; color:var(--secondary); display:block; margin-bottom:0.5rem;"></i>
-                            <div style="font-size:0.85rem; color:var(--text-muted);">Supervisors</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; opacity:0.7;">Dr. Ghada El-Banby</div>
-                        </div>
+                        
+                        <h3 class="slide-title anim-elem" style="margin-top: 1.5rem; font-size: 2.5rem;">Thank You!</h3>
                     </div>
                 </div>
             </div>
 
         </div>
+        <!-- Pagination -->
         <div class="swiper-pagination"></div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <script>
-        // Swiper Init
-        var swiper = new Swiper(".main-swiper", {
-            grabCursor: true,
-            effect: "coverflow",
-            coverflowEffect: { rotate: 30, stretch: 0, depth: 200, modifier: 1, slideShadows: true },
-            speed: 800, keyboard: { enabled: true }, mousewheel: true,
-            pagination: { el: ".swiper-pagination", clickable: true }
-        });
-
-        // Tilt Init
-        VanillaTilt.init(document.querySelectorAll("[data-tilt]"));
-
-        // Particles Init
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": ["#00ffcc", "#3b82f6"] },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.4 },
-                "size": { "value": 3, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.1, "width": 1 },
-                "move": { "enable": true, "speed": 1 }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
-                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } }
-            },
-            "retina_detect": true
-        });
-
-        // ─── VITA GUI SIMULATOR (Medically Accurate) ────────────────
-        // Global so vitaTrigger() can access it
-        var vitaState = { mode: 'normal', hr: 72, spo2: 98.5, temp: 36.8, bp: '120/80', points: [] };
-
-        (function() {
-            const canvas = document.getElementById('ecg-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const W = canvas.width, H = canvas.height;
-
-            // ── Medically accurate ECG morphology templates ──────────
-            // Convention: 0.5 = baseline, lower = positive deflection (upward on screen)
-            // Normal Sinus Rhythm — P wave → PR → narrow QRS → ST → T wave
-            const tplNormal = [
-                0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,         // isoelectric baseline
-                0.48,0.44,0.41,0.40,0.41,0.44,0.48,0.5,            // P wave (small +)
-                0.5,0.5,0.5,0.5,0.5,                                // PR segment (flat)
-                0.53,0.56,                                           // Q wave (small -)
-                0.38,0.18,0.05,0.02,0.05,0.20,0.40,                 // R wave (tall +) & S wave
-                0.56,0.60,0.55,0.51,                                 // S nadir
-                0.5,0.5,0.5,0.5,0.5,                                // ST segment (flat = normal)
-                0.47,0.44,0.41,0.40,0.41,0.44,0.47,0.5,            // T wave (moderate +)
-                0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5   // return to baseline
-            ];
-
-            // Sinus Tachycardia — same shape, shorter cycle (P may crowd T)
-            const tplTachy = [
-                0.5,0.5,0.5,0.5,0.5,                                // short baseline
-                0.47,0.43,0.40,0.43,0.47,0.5,                       // P wave
-                0.5,0.5,0.5,                                         // short PR
-                0.54,0.57,                                           // Q
-                0.35,0.14,0.03,0.02,0.05,0.18,0.38,                 // R & S
-                0.56,0.60,0.54,0.5,                                  // S
-                0.5,0.5,0.5,                                         // ST (short)
-                0.46,0.42,0.40,0.42,0.46,0.5,                       // T wave
-                0.5,0.5,0.5,0.5                                      // short return
-            ];
-
-            // Ventricular Tachycardia (VTach) — wide bizarre QRS, NO P waves
-            const tplVtach = [
-                0.5,0.5,0.5,0.5,                                     // no P wave
-                0.46,0.40,0.32,0.22,0.13,0.07,0.03,0.02,             // slow rise (wide QRS)
-                0.03,0.06,0.10,0.16,0.24,0.33,0.42,                  // wide QRS peak
-                0.50,0.56,0.62,0.67,0.70,0.68,0.62,0.55,             // bizarre S & ST
-                0.50,0.50,0.50,0.50                                   // short baseline, no T
-            ];
-
-            // Mode → template + speed multiplier + HR range
-            const modeConfig = {
-                normal:      { tpl: tplNormal, speedMult: 1.0, hrBase: 72,  hrVar: 3  },
-                tachycardia: { tpl: tplTachy,  speedMult: 2.0, hrBase: 155, hrVar: 10 },
-                low_spo2:    { tpl: tplNormal, speedMult: 1.2, hrBase: 88,  hrVar: 4  },
-                fever:       { tpl: tplNormal, speedMult: 1.4, hrBase: 102, hrVar: 5  },
-                critical:    { tpl: tplVtach,  speedMult: 2.8, hrBase: 168, hrVar: 12 }
-            };
-
-            // Pre-fill buffer
-            for (let i = 0; i < W; i++) vitaState.points.push(H * 0.5);
-
-            // ── Vitals update ─────────────────────────────────────────
-            setInterval(() => {
-                if (!document.getElementById('ecg-canvas')) return;
-                const s = vitaState, cfg = modeConfig[s.mode];
-                const rnd = () => (Math.random() - 0.5);
-                s.hr   = Math.round(cfg.hrBase + rnd() * cfg.hrVar);
-
-                if (s.mode === 'normal')      { s.spo2=(98.5+rnd()*0.4).toFixed(1); s.temp=(36.8+rnd()*0.1).toFixed(1); s.bp=`${119+Math.round(rnd()*4)}/${79+Math.round(rnd()*3)}`; }
-                else if (s.mode==='tachycardia'){ s.spo2=(96.0+rnd()*1).toFixed(1);  s.temp=(37.2+rnd()*0.2).toFixed(1); s.bp=`${142+Math.round(rnd()*8)}/${92+Math.round(rnd()*5)}`; }
-                else if (s.mode==='low_spo2')  { s.spo2=(87.5+rnd()*2).toFixed(1);  s.temp=(36.9+rnd()*0.2).toFixed(1); s.bp=`${114+Math.round(rnd()*5)}/${74+Math.round(rnd()*3)}`; }
-                else if (s.mode==='fever')     { s.spo2=(97.0+rnd()*0.5).toFixed(1);s.temp=(39.3+rnd()*0.3).toFixed(1); s.bp=`${126+Math.round(rnd()*6)}/${83+Math.round(rnd()*4)}`; }
-                else if (s.mode==='critical')  { s.spo2=(84.5+rnd()*3).toFixed(1);  s.temp=(40.2+rnd()*0.4).toFixed(1); s.bp=`${167+Math.round(rnd()*10)}/${107+Math.round(rnd()*6)}`; }
-
-                ['vs-hr','vs-spo2','vs-temp','vs-bp'].forEach((id,i) => {
-                    const el = document.getElementById(id);
-                    if (el) el.textContent = [s.hr+' BPM', s.spo2+' %', s.temp+' °C', s.bp][i];
-                });
-            }, 900);
-
-            // ── ECG Animation ─────────────────────────────────────────
-            let frameIdx = 0, vtachFlash = false;
-            setInterval(() => { vtachFlash = !vtachFlash; }, 300); // VTach alarm flash
-
-            function drawECG() {
-                if (!document.getElementById('ecg-canvas')) return;
-                requestAnimationFrame(drawECG);
-
-                const cfg = modeConfig[vitaState.mode];
-                const tpl = cfg.tpl;
-                frameIdx   += cfg.speedMult;
-                const tIdx  = Math.floor(frameIdx) % tpl.length;
-                const raw   = tpl[tIdx];
-                const y     = H * (0.1 + raw * 0.8);  // map 0-1 → top 10% to bottom 10%
-
-                vitaState.points.push(y);
-                if (vitaState.points.length > W) vitaState.points.shift();
-
-                // Background
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, W, H);
-
-                // ECG grid (same green tint as real monitors)
-                ctx.strokeStyle = 'rgba(0,120,60,0.22)';
-                ctx.lineWidth   = 0.5;
-                for (let gx = 0; gx < W; gx += 24) { ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
-                for (let gy = 0; gy < H; gy += 20) { ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
-
-                // ECG color: always GREEN except VTach flashes RED (alarm)
-                const isVtach   = vitaState.mode === 'critical';
-                const lineColor = isVtach && vtachFlash ? '#ff2222' : '#00e87a';
-
-                ctx.shadowColor = lineColor;
-                ctx.shadowBlur  = isVtach ? 12 : 7;
-                ctx.strokeStyle = lineColor;
-                ctx.lineWidth   = 2;
-                ctx.beginPath();
-                for (let i = 0; i < vitaState.points.length; i++) {
-                    i === 0 ? ctx.moveTo(i, vitaState.points[i]) : ctx.lineTo(i, vitaState.points[i]);
-                }
-                ctx.stroke();
-                ctx.shadowBlur = 0;
-            }
-            drawECG();
-
-            // ECG connected dot blink
-            setInterval(() => {
-                const dot = document.getElementById('ecg-dot');
-                if (dot) dot.style.opacity = dot.style.opacity === '0' ? '1' : '0';
-            }, 600);
-        })();
-
-        // ── Alert definitions ─────────────────────────────────────────
-        const vitaAlerts = {
-            normal:      { bar:'#1a5c2a', msg:'Sinus Rhythm — All vitals within normal range',               rec:'Continue monitoring. Patient hemodynamically stable.' },
-            tachycardia: { bar:'#7a4400', msg:'Sinus Tachycardia detected — HR > 100 BPM',                  rec:'Assess cause: pain, anxiety, hypovolemia. 12-lead ECG recommended.' },
-            low_spo2:    { bar:'#1a2c6a', msg:'Hypoxemia detected — SpO2 < 90%',                            rec:'Administer supplemental O₂. Recheck probe placement. Escalate if persistent.' },
-            fever:       { bar:'#6a2000', msg:'Pyrexia detected — Temperature > 38.5°C',                    rec:'Consider antipyretics. Check infection source. Increase fluid intake.' },
-            critical:    { bar:'#8a0000', msg:'⚠ Ventricular Tachycardia — LIFE THREATENING ARRHYTHMIA',    rec:'IMMEDIATE ACTION: Assess pulse → if pulseless → CPR + Defibrillation.' }
-        };
-
-
-        function vitaSimLogin()    { alert('VITA OS: Session ended. Returning to login screen.'); }
-        function vitaSimDesktop()  { alert('VITA OS: Minimized to system desktop.'); }
-        function vitaSimRestart()  { alert('VITA OS: System restart initiated. Please wait...'); }
-        function vitaSimShutdown() { alert('VITA OS: Safe shutdown in progress. Do not disconnect power.'); }
-
-        // ── Hero Device Live Screen ───────────────────────────────────
-        function initHeroScreen(img) {
-            // Wait a tick so layout is computed
-            setTimeout(function() {
-                var canvas = document.getElementById('hero-ecg');
-                if (!canvas) return;
-                var W = canvas.offsetWidth  || 200;
-                var H = canvas.offsetHeight || 80;
-                canvas.width  = W;
-                canvas.height = H;
-                var ctx = canvas.getContext('2d');
-
-                // Normal sinus ECG template
-                var tpl = [
-                    0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,
-                    0.48,0.44,0.41,0.40,0.41,0.44,0.48,0.5,
-                    0.5,0.5,0.5,0.5,0.5,
-                    0.53,0.56,
-                    0.38,0.18,0.05,0.02,0.05,0.20,0.40,
-                    0.56,0.60,0.55,0.51,
-                    0.5,0.5,0.5,0.5,0.5,
-                    0.47,0.44,0.41,0.40,0.41,0.44,0.47,0.5,
-                    0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5
-                ];
-
-                var pts = [];
-                for (var i=0; i<W; i++) pts.push(H*0.5);
-                var fi = 0;
-
-                function draw() {
-                    if (!document.getElementById('hero-ecg')) return;
-                    requestAnimationFrame(draw);
-                    fi += 1.5;
-                    var raw = tpl[Math.floor(fi) % tpl.length];
-                    pts.push(H * (0.1 + raw * 0.8));
-                    if (pts.length > W) pts.shift();
-
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(0,0,W,H);
-
-                    // subtle grid
-                    ctx.strokeStyle = 'rgba(0,100,50,0.2)';
-                    ctx.lineWidth = 0.5;
-                    for (var gx=0; gx<W; gx+=16){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
-                    for (var gy=0; gy<H; gy+=14){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
-
-                    // ECG line
-                    ctx.shadowColor = '#00e87a';
-                    ctx.shadowBlur  = 6;
-                    ctx.strokeStyle = '#00e87a';
-                    ctx.lineWidth   = 1.5;
-                    ctx.beginPath();
-                    for (var i=0; i<pts.length; i++) {
-                        i===0 ? ctx.moveTo(i,pts[i]) : ctx.lineTo(i,pts[i]);
-                    }
-                    ctx.stroke();
-                    ctx.shadowBlur = 0;
-                }
-                draw();
-            }, 300);
-        }
-
-        // Hero vitals live update
-        setInterval(function() {
-            var hr   = document.getElementById('hero-hr');
-            var spo2 = document.getElementById('hero-spo2');
-            var temp = document.getElementById('hero-temp');
-            var bp   = document.getElementById('hero-bp');
-            var dot  = document.getElementById('hero-dot');
-            if (hr)   hr.textContent   = Math.round(70 + Math.random()*5);
-            if (spo2) spo2.textContent = (98 + (Math.random()-0.5)*0.6).toFixed(1)+'%';
-            if (temp) temp.textContent = (36.8+(Math.random()-0.5)*0.1).toFixed(1)+'°';
-            if (bp) {
-                var s=Math.round(118+Math.random()*4), d=Math.round(78+Math.random()*3);
-                bp.textContent = s+'/'+d;
-            }
-            if (dot) dot.style.opacity = dot.style.opacity==='0'?'1':'0';
-        }, 1000);
-
-        // ── Clinical Alerts Simulator ─────────────────────────────────
-        var alState = { mode: 'normal' };
-        var alFlashInterval = null;
-
-        var alScenarios = {
-            normal: { hr:'72 BPM',  spo2:'99.9 %', temp:'36.8 °C', bp:'120/80',  barBg:'#007700', label:'NORMAL:',    msg:'Sinus Rhythm — All vitals within normal range',            rec:'Continue monitoring. Patient hemodynamically stable.', ecgMode:'normal', dotColor:'#00ff88', ecgTxt:'ECG Connected', flash:false },
-            tachy:  { hr:'158 BPM', spo2:'96.2 %', temp:'37.3 °C', bp:'145/92',  barBg:'#884400', label:'WARNING:',   msg:'Sinus Tachycardia — HR > 150 BPM detected',                rec:'Assess cause: pain, anxiety, hypovolemia. 12-lead ECG recommended.', ecgMode:'tachy', dotColor:'#ffaa00', ecgTxt:'ECG Connected', flash:true,  flashC2:'#553300' },
-            hypo:   { hr:'90 BPM',  spo2:'87.4 %', temp:'36.9 °C', bp:'112/73',  barBg:'#112288', label:'CRITICAL:',  msg:'Hypoxemia — SpO2 < 90% detected',                          rec:'Administer supplemental O₂ immediately. Recheck probe placement.', ecgMode:'normal', dotColor:'#4488ff', ecgTxt:'ECG Connected', flash:true,  flashC2:'#0a1666' },
-            fever:  { hr:'104 BPM', spo2:'97.1 %', temp:'39.5 °C', bp:'128/84',  barBg:'#772200', label:'WARNING:',   msg:'Pyrexia — Temperature > 38.5°C detected',                  rec:'Consider antipyretics. Investigate infection source. Monitor fluids.', ecgMode:'tachy', dotColor:'#ff6633', ecgTxt:'ECG Connected', flash:true,  flashC2:'#441100' },
-            vtach:  { hr:'182 BPM', spo2:'83.1 %', temp:'40.3 °C', bp:'168/108', barBg:'#880000', label:'⚠ CRITICAL:', msg:'Ventricular Tachycardia — LIFE THREATENING ARRHYTHMIA', rec:'IMMEDIATE: Assess pulse → Pulseless? → CPR + Defibrillation NOW.',  ecgMode:'vtach', dotColor:'#ff0000', ecgTxt:'⚠ ARRHYTHMIA',  flash:true,  flashC2:'#440000' }
-        };
-
-        // ── Continuous Alarm System ───────────────────────────────────
-        var _alarmLoop = null;
-        var _alarmAC   = null;
-
-        function _beep(freq, dur) {
-            try {
-                if (!_alarmAC) _alarmAC = new (window.AudioContext || window.webkitAudioContext)();
-                var o = _alarmAC.createOscillator();
-                var g = _alarmAC.createGain();
-                o.connect(g); g.connect(_alarmAC.destination);
-                o.frequency.value = freq; o.type = 'sine';
-                g.gain.setValueAtTime(0.35, _alarmAC.currentTime);
-                g.gain.exponentialRampToValueAtTime(0.001, _alarmAC.currentTime + dur);
-                o.start(_alarmAC.currentTime);
-                o.stop(_alarmAC.currentTime + dur);
-            } catch(e) {}
-        }
-
-        function stopAlarmLoop() {
-            if (_alarmLoop) { clearInterval(_alarmLoop); _alarmLoop = null; }
-        }
-
-        function startAlarmLoop(type) {
-            stopAlarmLoop();
-            var freq  = type==='critical'||type==='vtach' ? 880 : type==='tachycardia'||type==='tachy'||type==='fever' ? 660 : 520;
-            var count = type==='critical'||type==='vtach' ? 3 : 2;
-            var gap   = type==='critical'||type==='vtach' ? 180 : 260;
-            function doBeeps() {
-                for (var i=0; i<count; i++) {
-                    (function(n){ setTimeout(function(){ _beep(freq, 0.18); }, n*gap); })(i);
-                }
-            }
-            doBeeps();
-            _alarmLoop = setInterval(doBeeps, type==='critical'||type==='vtach' ? 900 : 1400);
-        }
-
-        function playAlarm(type) { // kept for alTrigger compatibility
-            if (type === 'normal') { stopAlarmLoop(); }
-            else { startAlarmLoop(type); }
-        }
-
-        // Hook alarm into vitaTrigger (Testing slide)
-        var _origVitaTrigger = null;
-        function vitaTrigger(mode) {
-            vitaState.mode = mode;
-            vitaState.points = [];
-            var a   = vitaAlerts[mode];
-            var bar = document.getElementById('critical-bar');
-            var msg = document.getElementById('critical-msg');
-            var rec = document.getElementById('med-rec');
-            if (bar) bar.style.background = a.bar;
-            if (msg) msg.textContent = a.msg;
-            if (rec) rec.textContent  = a.rec;
-            // Alarm
-            if (mode === 'normal') stopAlarmLoop();
-            else startAlarmLoop(mode);
-        }
-
-
-        function stopAlFlash() {
-            if (alFlashInterval) { clearInterval(alFlashInterval); alFlashInterval=null; }
-            var icon=document.getElementById('al-alarm-icon');
-            if (icon) icon.style.display='none';
-        }
-
-        function startAlFlash(c1, c2) {
-            stopAlFlash();
-            var bar=document.getElementById('al-critical-bar');
-            var lbl=document.getElementById('al-critical-label');
-            var icon=document.getElementById('al-alarm-icon');
-            if (icon) icon.style.display='inline';
-            var on=true;
-            alFlashInterval=setInterval(function(){
-                if (bar) bar.style.background = on ? c1 : c2;
-                if (lbl) { lbl.style.background=on?'#fff':c1; lbl.style.color=on?c1:'#fff'; }
-                on=!on;
-            }, 380);
-        }
-
-        function alTrigger(mode) {
-            alState.mode=mode;
-            var s=alScenarios[mode]; if (!s) return;
-            var ids=['al-hr','al-spo2','al-temp','al-bp'];
-            var vals=[s.hr, s.spo2, s.temp, s.bp];
-            ids.forEach(function(id,i){ var el=document.getElementById(id); if(el) el.textContent=vals[i]; });
-            var bar=document.getElementById('al-critical-bar');
-            var lbl=document.getElementById('al-critical-label');
-            var msg=document.getElementById('al-critical-msg');
-            var rec=document.getElementById('al-med-rec');
-            var dot=document.getElementById('al-dot');
-            var ecgSt=document.getElementById('al-ecg-status');
-            var gui=document.getElementById('alerts-gui');
-            stopAlFlash();
-            if (bar) bar.style.background=s.barBg;
-            if (lbl) { lbl.textContent=s.label; lbl.style.background='#fff'; lbl.style.color=s.barBg; }
-            if (msg) msg.textContent=s.msg;
-            if (rec) rec.textContent=s.rec;
-            if (dot) dot.style.background=s.dotColor;
-            if (ecgSt) ecgSt.textContent=s.ecgTxt;
-            if (gui) { gui.style.borderColor=s.flash?s.barBg:'#1a3a5c'; gui.style.boxShadow=s.flash?'0 0 40px '+s.barBg+'88':'0 0 40px rgba(0,150,255,0.1)'; }
-            if (s.flash) startAlFlash(s.barBg, s.flashC2||'#333');
-            alEcgMode=s.ecgMode; alEcgPts=[];
-            playAlarm(mode);
-        }
-
-        // Clinical Alerts ECG canvas
-        var alEcgMode='normal', alEcgPts=[];
-        (function(){
-            var canvas=document.getElementById('al-ecg-canvas');
-            if (!canvas) return;
-            var ctx=canvas.getContext('2d'), W=canvas.width, H=canvas.height;
-            for (var i=0;i<W;i++) alEcgPts.push(H*0.5);
-            var tpls={
-                normal:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.48,0.44,0.41,0.40,0.41,0.44,0.48,0.5,0.5,0.5,0.5,0.5,0.5,0.53,0.56,0.38,0.18,0.05,0.02,0.05,0.20,0.40,0.56,0.60,0.55,0.51,0.5,0.5,0.5,0.5,0.5,0.47,0.44,0.41,0.40,0.41,0.44,0.47,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],
-                tachy: [0.5,0.5,0.5,0.5,0.5,0.47,0.43,0.40,0.43,0.47,0.5,0.5,0.5,0.54,0.57,0.35,0.14,0.03,0.02,0.05,0.18,0.38,0.56,0.60,0.54,0.5,0.5,0.5,0.46,0.42,0.40,0.42,0.46,0.5,0.5,0.5,0.5],
-                vtach: [0.5,0.5,0.5,0.5,0.46,0.40,0.32,0.22,0.13,0.07,0.03,0.02,0.03,0.06,0.10,0.16,0.24,0.33,0.42,0.50,0.56,0.62,0.67,0.70,0.68,0.62,0.55,0.50,0.50,0.50,0.50]
-            };
-            var spds={normal:1.5,tachy:2.2,vtach:3.1};
-            var fi=0, vtF=false;
-            setInterval(function(){vtF=!vtF;},280);
-
-            function drawAl(){
-                if (!document.getElementById('al-ecg-canvas')) return;
-                requestAnimationFrame(drawAl);
-                var tpl=tpls[alEcgMode]||tpls.normal;
-                fi+=spds[alEcgMode]||1.5;
-                alEcgPts.push(H*(0.1+tpl[Math.floor(fi)%tpl.length]*0.8));
-                if (alEcgPts.length>W) alEcgPts.shift();
-                ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
-                ctx.strokeStyle='rgba(0,110,55,0.2)'; ctx.lineWidth=0.5;
-                for(var gx=0;gx<W;gx+=24){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
-                for(var gy=0;gy<H;gy+=20){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
-                var col=alEcgMode==='vtach'&&vtF?'#ff2222':'#00e87a';
-                ctx.shadowColor=col; ctx.shadowBlur=7; ctx.strokeStyle=col; ctx.lineWidth=2;
-                ctx.beginPath();
-                for(var i=0;i<alEcgPts.length;i++){i===0?ctx.moveTo(i,alEcgPts[i]):ctx.lineTo(i,alEcgPts[i]);}
-                ctx.stroke(); ctx.shadowBlur=0;
-            }
-            drawAl();
-
-            // live vitals fluctuation
-            setInterval(function(){
-                var s=alScenarios[alState.mode]; if (!s) return;
-                var hrEl=document.getElementById('al-hr');
-                var spEl=document.getElementById('al-spo2');
-                var tmEl=document.getElementById('al-temp');
-                if(hrEl) hrEl.textContent=(parseInt(s.hr)+Math.round((Math.random()-0.5)*4))+' BPM';
-                if(spEl) spEl.textContent=((parseFloat(s.spo2)+(Math.random()-0.5)*0.4).toFixed(1))+' %';
-                if(tmEl) tmEl.textContent=((parseFloat(s.temp)+(Math.random()-0.5)*0.1).toFixed(1))+' °C';
-            },1000);
-        })();
-    
-
-        // ═══════════════════════════════════════════════
-        // ISOMETRIC EXPLODED VIEW (Architecture Slide)
-        // ═══════════════════════════════════════════════
-        var isExploded  = false;
-        var isoLayerIds = ['iso-l0','iso-l1','iso-l2','iso-l3','iso-l4','iso-l5'];
-        // Symmetric Z positions to keep the center of the stack fixed on screen
-        var zCollapsed  = [-50, -30, -10, 10, 30, 50];
-        // 120px gap mathematically guarantees zero overlap at 62deg rotateX!
-        var zExploded   = [-300, -180, -60, 60, 180, 300];
-
-        function toggleExplode() {
-            var hint      = document.getElementById('expl-click-hint');
-            var reassHint = document.getElementById('expl-hint-reassemble');
-            var isoLabels = document.querySelectorAll('.iso-label');
-            var dataBeam  = document.getElementById('data-beam');
-
-            if (!isExploded) {
-                // Spread layers apart
-                isoLayerIds.forEach(function(id, i) {
-                    var el = document.getElementById(id);
-                    if (el) el.style.transform = 'translateZ(' + zExploded[i] + 'px)';
-                });
-                
-                // Show labels
-                isoLabels.forEach(function(lbl) { lbl.style.opacity = '1'; });
-                
-                // Animate Beam
-                if(dataBeam) {
-                    dataBeam.style.opacity = '1';
-                    dataBeam.style.height = '600px';
-                }
-
-                // Swap hints
-                if (hint)      hint.style.opacity      = '0';
-                if (reassHint) reassHint.style.opacity = '1';
-                isExploded = true;
-
-            } else {
-                // Collapse layers back
-                isoLayerIds.forEach(function(id, i) {
-                    var el = document.getElementById(id);
-                    if (el) el.style.transform = 'translateZ(' + zCollapsed[i] + 'px)';
-                });
-                
-                isoLabels.forEach(function(lbl) { lbl.style.opacity = '0'; });
-                
-                // Hide Beam
-                if(dataBeam) {
-                    dataBeam.style.opacity = '0';
-                    dataBeam.style.height = '0px';
-                }
-                
-                if (hint)      hint.style.opacity      = '1';
-                if (reassHint) reassHint.style.opacity = '0';
-                isExploded = false;
-            }
-        }
-
-        // Auto-trigger when architecture slide becomes active
-        function triggerExplodedView() {
-            if (!isExploded) { setTimeout(toggleExplode, 600); }
-        }
-        function resetExplodedView() {
-            if (isExploded) { toggleExplode(); }
-        }
-
-        // ═══════════════════════════════════════════════
-        // CSS 3D MOUSE TRACKING (Device Showcase Slide)
-        // ═══════════════════════════════════════════════
-        var mouseTrackingInit = false;
-        function init3DMouseTracking() {
-            if (mouseTrackingInit) return;
-            var scene = document.getElementById('vita-3d-scene');
-            var card  = document.getElementById('vita-3d-card');
-            if (!scene || !card) return;
-            mouseTrackingInit = true;
-
-            scene.addEventListener('mousemove', function(e) {
-                var rect = scene.getBoundingClientRect();
-                var dx   = (e.clientX - rect.left  - rect.width  / 2) / (rect.width  / 2);
-                var dy   = (e.clientY - rect.top   - rect.height / 2) / (rect.height / 2);
-                card.style.transform = 'rotateY(' + (dx * 25) + 'deg) rotateX(' + (-dy * 20) + 'deg)';
-            });
-
-            scene.addEventListener('mouseleave', function() {
-                card.style.transition = 'transform 0.6s ease';
-                card.style.transform  = 'rotateY(0deg) rotateX(0deg)';
-                setTimeout(function() { card.style.transition = 'transform 0.1s ease'; }, 650);
-            });
-        }
-
-
-        // ═══════════════════════════════════════════════
-        // CHART.JS — CLINICAL ACCURACY
-        // ═══════════════════════════════════════════════
-        var chartInitialized = false;
-        var accuracyChart    = null;
-        function initChartJS() {
-            if (chartInitialized) return;
-            var ctx = document.getElementById('accuracyChart');
-            if (!ctx) return;
-            chartInitialized = true;
-
-            var isLight   = document.body.classList.contains('light-mode');
-            var textColor = isLight ? '#0f172a' : '#e2e8f0';
-            var gridColor = isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
-
-            accuracyChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Heart Rate (BPM)', 'SpO2 (%)', 'Temperature (°C)'],
-                    datasets: [
-                        {
-                            label: 'Gold Standard ICU Monitor',
-                            data: [75.0, 99.0, 37.0],
-                            backgroundColor: 'rgba(37, 99, 235, 0.55)',
-                            borderColor: 'rgba(37, 99, 235, 1)',
-                            borderWidth: 2, borderRadius: 6
-                        },
-                        {
-                            label: 'VITA Monitor',
-                            data: [74.5, 98.7, 36.9],
-                            backgroundColor: 'rgba(0, 255, 204, 0.55)',
-                            borderColor: 'rgba(0, 255, 204, 1)',
-                            borderWidth: 2, borderRadius: 6
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    animation: { duration: 1800, easing: 'easeOutQuart' },
-                    scales: {
-                        y: { beginAtZero: false, min: 30, max: 110,
-                             ticks: { color: textColor }, grid: { color: gridColor } },
-                        x: { ticks: { color: textColor, font: { size: 11 } },
-                             grid: { color: gridColor } }
-                    },
-                    plugins: {
-                        legend: { labels: { color: textColor, font: { size: 13 } } },
-                        title: {
-                            display: true,
-                            text: 'VITA vs. Gold Standard — Measurement Correlation',
-                            color: textColor, font: { size: 14, weight: 'bold' }
-                        }
-                    }
-                }
-            });
-        }
-
-        // ═══════════════════════════════════════════════
-        // SWIPER — SLIDE CHANGE HOOKS (using slide IDs)
-        // ═══════════════════════════════════════════════
-        var slideIndexArch     = -1;
-        var slideIndex3D       = -1;
-        var slideIndexAccuracy = -1;
-
-        swiper.slides.forEach(function(slide, idx) {
-            if (slide.id === 'slide-3d')          slideIndex3D       = idx;
-            if (slide.id === 'slide-accuracy')     slideIndexAccuracy = idx;
-            if (slide.querySelector('#expl-assembled')) slideIndexArch = idx;
-        });
-
-        swiper.on('slideChangeTransitionEnd', function() {
-            var idx = swiper.activeIndex;
-
-            if (idx === slideIndexArch && slideIndexArch !== -1) {
-                triggerExplodedView();
-            } else {
-                resetExplodedView();
-            }
-
-            if (idx === slideIndex3D && slideIndex3D !== -1) {
-                init3DMouseTracking();
-            }
-
-            if (idx === slideIndexAccuracy && slideIndexAccuracy !== -1) {
-                setTimeout(initChartJS, 200);
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-
-        // ═══════════════════════════════════════════════
-        // MAGNETIC SMART MOUSE
-        // ═══════════════════════════════════════════════
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
-
-        window.addEventListener('mousemove', function(e) {
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
-            
-            cursorOutline.animate({
-                left: e.clientX + 'px',
-                top: e.clientY + 'px'
-            }, { duration: 250, fill: "forwards" });
-        });
-
-        // Add magnetic effect to interactive elements
-        const interactives = document.querySelectorAll('button, a, .action-btn, .swiper-pagination-bullet, .ph-fill');
-        interactives.forEach(el => {
-            el.addEventListener('mouseover', () => {
-                cursorOutline.classList.add('cursor-magnetic');
-            });
-            el.addEventListener('mouseout', () => {
-                cursorOutline.classList.remove('cursor-magnetic');
-            });
-        });
-
-</script>
+    <!-- GSAP & Swiper & Mermaid Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'base', themeVariables: { primaryColor: '#f0fdfa', edgeLabelBackground:'#fff', primaryBorderColor: '#0ea5e9' }});</script>
+    <script src="script.js"></script>
 </body>
 </html>
-
-
